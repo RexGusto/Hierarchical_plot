@@ -1,0 +1,12 @@
+pt,release,pt_ds,augreg,train,train_specific,acc_in1k
+resnet50.tv_in1k,2015/12,in1k,weak,fsl,fsl,76.13
+resnet50.tv2_in1k,2021/11,in1k,strong,fsl,fsl,80.85
+resnet50.gluon_in1k,2018/12,in1k,medium,fsl,fsl,77.58
+resnet50.fb_swsl_ig1b_ft_in1k,2019/05,ig1b,weak,swsl,swsl_kd,81.18
+resnet50.fb_ssl_yfcc100m_ft_in1k,2019/05,yfcc100m,weak,ssl,ssl_kd,79.22
+resnet50.a1_in1k,2021/10,in1k,strong,fsl,fsl_bce,80.38
+resnet50.in1k_mocov3,2021/04,in1k,medium,ssl,ssl_disc,74.6
+resnet50.in1k_spark,2023/01,in1k,medium,ssl,ssl_gen,80.6
+resnet50.in1k_supcon,2020/04,in1k,strong,ssl,ssl_disc,79.1
+resnet50.in1k_swav,2020/06,in1k,strong,ssl,ssl_disc,75.3
+resnet50.in21k_miil,2021/04,in21k,strong,fsl,fsl_hierarchical,82

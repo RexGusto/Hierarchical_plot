@@ -28,27 +28,12 @@ SETTINGS_DIC = {
     'mtd_448': 'IS=448 (MTD)',
 }
 
-METHODS_VIT_FSL = [
-    'hivit_base_patch16_224.orig_in21k', 'hivit_base_patch16_224_miil.in21k',
-    'hideit_base_patch16_224.fb_in1k', 'hideit3_base_patch16_224.fb_in1k',
-    'hideit3_base_patch16_224.fb_in22k_ft_in1k',
+SERIAL_DIC = {
+    23: 'FT',
+    24: 'FZ',
+}
 
-    'hivit_base_patch16_224.orig_in21k_fz', 'hivit_base_patch16_224_miil.in21k_fz',
-    'hideit_base_patch16_224.fb_in1k_fz', 'hideit3_base_patch16_224.fb_in1k_fz',
-    'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz',
-]
-
-METHODS_VIT_SSL = [
-    'hivit_base_patch16_clip_224.laion2b','hivit_base_patch16_224.mae', 
-    'hivit_base_patch16_224.in1k_mocov3','hivit_base_patch16_224.dino',
-    'hivit_base_patch16_siglip_224.v2_webli',
-
-    'hivit_base_patch16_clip_224.laion2b_fz','hivit_base_patch16_224.mae_fz', 
-    'hivit_base_patch16_224.in1k_mocov3_fz','hivit_base_patch16_224.dino_fz',
-    'hivit_base_patch16_siglip_224.v2_webli_fz',
-]
-
-METHODS_RESNET_FSL = [
+METHODS_RESNET = [
     'hiresnet50.tv_in1k', 'hiresnet50.tv2_in1k', 'hiresnet50.gluon_in1k', 
     'hiresnet50.fb_swsl_ig1b_ft_in1k', 'hiresnet50.fb_ssl_yfcc100m_ft_in1k',
     'hiresnet50.a1_in1k',
@@ -56,16 +41,32 @@ METHODS_RESNET_FSL = [
     'hiresnet50.tv_in1k_fz', 'hiresnet50.tv2_in1k_fz', 'hiresnet50.gluon_in1k_fz', 
     'hiresnet50.fb_swsl_ig1b_ft_in1k_fz', 'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz',
     'hiresnet50.a1_in1k_fz',
-]
 
-METHODS_RESNET_SSL = [
-    'hiresnet50.in1k_byol', 'hiresnet50.in1k_mocov3', 'hiresnet50.in1k_spark', 
+    'hiresnet50.in1k_mocov3', 'hiresnet50.in1k_spark', 
     'hiresnet50.in1k_supcon', 'hiresnet50.in1k_swav',
     'hiresnet50.in21k_miil',
 
     'hiresnet50.in1k_byol_fz', 'hiresnet50.in1k_mocov3_fz', 'hiresnet50.in1k_spark_fz', 
     'hiresnet50.in1k_supcon_fz', 'hiresnet50.in1k_swav_fz',
     'hiresnet50.in21k_miil_fz',
+]
+
+METHODS_VIT = [
+    'hivit_base_patch16_224.orig_in21k', 'hivit_base_patch16_224_miil.in21k',
+    'hideit_base_patch16_224.fb_in1k', 'hideit3_base_patch16_224.fb_in1k',
+    'hideit3_base_patch16_224.fb_in22k_ft_in1k',
+
+    'hivit_base_patch16_224.orig_in21k_fz', 'hivit_base_patch16_224_miil.in21k_fz',
+    'hideit_base_patch16_224.fb_in1k_fz', 'hideit3_base_patch16_224.fb_in1k_fz',
+    'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz',
+
+    'hivit_base_patch16_clip_224.laion2b','hivit_base_patch16_224.mae', 
+    'hivit_base_patch16_224.in1k_mocov3','hivit_base_patch16_224.dino',
+    'hivit_base_patch16_siglip_224.v2_webli',
+
+    'hivit_base_patch16_clip_224.laion2b_fz','hivit_base_patch16_224.mae_fz', 
+    'hivit_base_patch16_224.in1k_mocov3_fz','hivit_base_patch16_224.dino_fz',
+    'hivit_base_patch16_siglip_224.v2_webli_fz',
 ]
 
 DATASETS_UFGIR = [
@@ -109,61 +110,66 @@ DATASETS_DIC = {
 }
 
 METHODS_DIC = {
-    # Resnet FSL Models
-    'hiresnet50.tv_in1k': 'Torchv1', 
-    'hiresnet50.tv2_in1k': 'Torchv2', 
-    'hiresnet50.gluon_in1k': 'Gluon', 
-    'hiresnet50.fb_swsl_ig1b_ft_in1k': 'SWSL',
-    'hiresnet50.fb_ssl_yfcc100m_ft_in1k': 'SSL',
-    'hiresnet50.a1_in1k': 'A1',
-
-    'hiresnet50.tv_in1k_fz': 'Torchv1', 
-    'hiresnet50.tv2_in1k_fz': 'Torchv2', 
-    'hiresnet50.gluon_in1k_fz': 'Gluon', 
-    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz': 'SWSL',
-    'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz': 'SSL',
-    'hiresnet50.a1_in1k_fz': 'A1',
-
-    # Resnet SSL Models
-    'hiresnet50.in1k_byol': 'BYOL', 
-    'hiresnet50.in1k_mocov3': 'MoCo v3', 
-    'hiresnet50.in1k_spark': 'SParK', 
-    'hiresnet50.in1k_supcon': 'Supcon', 
-    'hiresnet50.in1k_swav': 'SwAV',
-    'hiresnet50.in21k_miil': 'MIIL',
-
-    'hiresnet50.in1k_byol_fz': 'BYOL', 
-    'hiresnet50.in1k_mocov3_fz': 'MoCo v3', 
-    'hiresnet50.in1k_spark_fz': 'SParK', 
-    'hiresnet50.in1k_supcon_fz': 'Supcon', 
-    'hiresnet50.in1k_swav_fz': 'SwAV',
-    'hiresnet50.in21k_miil_fz': 'MIIL',
-
-    # ViT FSL Models
+    # ViT models
+    'vit_b16': 'ViT',
     'hivit_base_patch16_224.orig_in21k': 'ViT',
     'hideit_base_patch16_224.fb_in1k': 'DeiT',
-    'hivit_base_patch16_224_miil.in21k': 'IN21k-P',
+    'hivit_base_patch16_224_miil.in21k': 'ViT IN21k-P',
     'hideit3_base_patch16_224.fb_in22k_ft_in1k': 'DeiT 3 (IN21k)',
     'hideit3_base_patch16_224.fb_in1k': 'DeiT 3 (IN1k)',
+    'hivit_base_patch16_224.in1k_mocov3': 'ViT MoCo v3',
+    'hivit_base_patch16_224.dino': 'ViT DINO',
+    'hivit_base_patch16_clip_224.laion2b': 'ViT CLIP',
+    'hivit_base_patch16_siglip_224.v2_webli': 'ViT SigLIP v2',
+    'hivit_base_patch16_224.mae': 'ViT MAE',
 
+    # ViT Frozen models
     'hivit_base_patch16_224.orig_in21k_fz': 'ViT',
     'hideit_base_patch16_224.fb_in1k_fz': 'DeiT',
-    'hivit_base_patch16_224_miil.in21k_fz': 'IN21k-P',
+    'hivit_base_patch16_224_miil.in21k_fz': 'ViT IN21k-P',
     'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz': 'DeiT 3 (IN21k)',
     'hideit3_base_patch16_224.fb_in1k_fz': 'DeiT 3 (IN1k)',
+    'hivit_base_patch16_224.in1k_mocov3_fz': 'ViT MoCo v3',
+    'hivit_base_patch16_224.dino_fz': 'ViT DINO',
+    'hivit_base_patch16_clip_224.laion2b_fz': 'ViT CLIP',
+    'hivit_base_patch16_siglip_224.v2_webli_fz': 'ViT SigLIP v2',
+    'hivit_base_patch16_224.mae_fz': 'ViT MAE',
 
-    # ViT SSL Models
-    'hivit_base_patch16_224.in1k_mocov3': 'MoCo v3',
-    'hivit_base_patch16_224.dino': 'DINO',
-    'hivit_base_patch16_224.mae': 'MAE',
-    'hivit_base_patch16_clip_224.laion2b': 'CLIP',
-    'hivit_base_patch16_siglip_224.v2_webli': 'SigLIP',
+    # ResNet FSL models
+    'hiresnet50.tv_in1k': 'RN TV1',
+    'hiresnet50.tv2_in1k': 'RN TV2',
+    'hiresnet50.gluon_in1k': 'RN Gluon',
+    'hiresnet50.a1_in1k': 'RN A1',
+    'hiresnet50.in21k_miil': 'RN IN21k-P',
 
-    'hivit_base_patch16_224.in1k_mocov3_fz': 'MoCo v3',
-    'hivit_base_patch16_224.dino_fz': 'DINO',
-    'hivit_base_patch16_224.mae_fz': 'MAE',
-    'hivit_base_patch16_clip_224.laion2b_fz': 'CLIP',
-    'hivit_base_patch16_siglip_224.v2_webli_fz': 'SigLIP',
+    # ResNet Semi-SL models
+    'hiresnet50.fb_swsl_ig1b_ft_in1k': 'RN IG1b',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k': 'RN YFCC100m',
+
+    # ResNet SSL models
+    'hiresnet50.in1k_byol': 'RN BYOL',
+    'hiresnet50.in1k_mocov3': 'RN MoCo v3',
+    'hiresnet50.in1k_supcon': 'RN SupCon',
+    'hiresnet50.in1k_swav': 'RN SwAV',
+    'hiresnet50.in1k_spark': 'RN SparK',
+
+    # ResNet FSL Frozen models 
+    'hiresnet50.tv_in1k_fz': 'RN TV1',
+    'hiresnet50.tv2_in1k_fz': 'RN TV2',
+    'hiresnet50.gluon_in1k_fz': 'RN Gluon',
+    'hiresnet50.a1_in1k_fz': 'RN A1',
+    'hiresnet50.in21k_miil_fz': 'RN IN21k-P',
+    
+    # ResNet Semi-SL Frozen models
+    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz': 'RN IG1b',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz': 'RN YFCC100m',
+
+    # ResNet SSL Frozen models
+    'hiresnet50.in1k_byol_fz': 'RN BYOL',
+    'hiresnet50.in1k_mocov3_fz': 'RN MoCo v3',
+    'hiresnet50.in1k_supcon_fz': 'RN SupCon',
+    'hiresnet50.in1k_swav_fz': 'RN SwAV',
+    'hiresnet50.in1k_spark_fz': 'RN SparK',
 }
 
 
@@ -173,6 +179,7 @@ VAR_DIC = {
     'acc_std': 'Accuracy Std. Dev. (%)',
     'dataset_name': 'Dataset',
     'method': 'Method',
+    'model_category': "Architecture",
     'family': 'Method Family',
     'flops': 'Inference FLOPs (10^9)',
     'time_train': 'Train Time (hours)',
@@ -188,6 +195,7 @@ VAR_DIC = {
     'latency_stream': 'Stream Latency (s)',
     'tp_batched': 'Batched Throughput  (Images/s)',
     'vram_batched': 'Batched VRAM (GB)',
+    'serial' : 'Status'
 }
 
 
@@ -200,6 +208,8 @@ def rename_var(x):
         return DATASETS_DIC[x]
     elif x in VAR_DIC.keys():
         return VAR_DIC[x]
+    elif x in SERIAL_DIC.keys():
+        return SERIAL_DIC[x]
     return x
 
 
@@ -212,6 +222,8 @@ def rename_vars(df, var_rename=False, args=None):
         df['dataset_name'] = df['dataset_name'].apply(rename_var)
     if 'family' in df.columns:
         df['family'] = df['family'].apply(rename_var)
+    if 'serial' in df.columns:
+        df['serial'] = df['serial'].apply(rename_var)
 
     if var_rename:
         df.rename(columns=VAR_DIC, inplace=True)
@@ -266,7 +278,25 @@ def load_df(input_file):
 
 def keep_columns(df, type='acc'):
     if type == 'acc':
-        keep = ['acc', 'dataset_name', 'serial', 'setting', 'method', 'lr']
+        keep = ['acc', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'augreg', 'acc_in1k', 'cka_avg_test', 'cka_avg_train',
+                'dist_avg_train', 'dist_avg_test', 'dist_norm_avg_train', 'dist_norm_avg_test',
+                'l2_norm_avg_train', 'l2_norm_avg_test',
+                'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
+                'cka_avg_test_ft', 'cka_avg_train_ft', 'dist_avg_train_ft', 'dist_avg_test_ft', 'dist_norm_avg_train_ft', 'dist_norm_avg_test_ft',
+                'l2_norm_avg_train_ft', 'l2_norm_avg_test_ft',
+                'cka_0_train_ft', 'cka_0_test_ft', 'cka_11_train_ft', 'cka_11_test_ft', 'cka_15_train_ft', 'cka_15_test_ft',
+                'cka_high_mean_train', 'cka_mid_mean_train', 'cka_low_mean_train',
+                'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
+                'cka_high_mean_train_ft', 'cka_mid_mean_train_ft', 'cka_low_mean_train_ft',
+                'cka_high_mean_test_ft', 'cka_mid_mean_test_ft', 'cka_low_mean_test_ft',
+                'MSC_train', 'MSC_val', 'V_intra_train', 'V_intra_val',
+                'S_inter_train', 'S_inter_val',
+                'clustering_diversity_train', 'clustering_diversity_val', 'lr',
+                'spectral_diversity_train', 'spectral_diversity_val',
+                'MSC_train_ft', 'MSC_val_ft', 'V_intra_train_ft', 'V_intra_val_ft',
+                'S_inter_train_ft', 'S_inter_val_ft',
+                'clustering_diversity_train_ft', 'clustering_diversity_val_ft',
+                'spectral_diversity_train_ft', 'spectral_diversity_val_ft']
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
                 'flops', 'max_memory']

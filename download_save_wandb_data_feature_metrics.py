@@ -5,23 +5,26 @@ import pandas as pd
 
 
 CONFIG_COLS = [
-    'serial', 'dataset_name', 'model_name', 'freeze_backbone',
-    'classifier', 'adapter', 'prompt', 
-    'opt', 'weight_decay', 'lr', 'base_lr', 'seed',
-    'epochs', 'image_size', 'batch_size', 'num_images_train', 'num_images_val',
+    'serial', 'dataset_name', 'model_name',
+    # 'freeze_backbone', 'classifier', 'adapter', 'prompt', 
 ]
 
-SUMMARY_COLS = [
-    'val_acc_level1', 'val_acc_level2', 'val_acc_level3', 'val_loss', 'ap_w',
-    'train_acc_level1', 'train_acc_level2', 'train_acc_level3', 'train_loss',
-    'time_total', 'max_memory', 'flops',
-    'no_params', 'no_params_trainable', 'throughput', 
+SUMMARY_COLS_GROUP1 = [
+    'cka_avg_test', 'cka_avg_train', 'dist_avg_train', 'dist_avg_test',
+    'dist_norm_avg_train', 'dist_norm_avg_test', 'l2_norm_avg_train', 'l2_norm_avg_test',
+    'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
+    'cka_high_mean_train', 'cka_mid_mean_train', 'cka_low_mean_train',
+    'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
 ]
-
+SUMMARY_COLS_GROUP2 = [
+    'MSC_train', 'MSC_val', 'V_intra_train', 'V_intra_val', 'S_inter_train', 'S_inter_val',
+    'clustering_diversity_train', 'clustering_diversity_val',
+    'spectral_diversity_train', 'spectral_diversity_val',
+]
+SUMMARY_COLS = SUMMARY_COLS_GROUP1 + SUMMARY_COLS_GROUP2
 
 SORT_COLS = [
-    'serial', 'dataset_name', 'model_name',
-    'lr', 'seed', 'host', 'batch_size',
+    'dataset_name', 'model_name',
 ]
 
 
@@ -61,8 +64,33 @@ def make_df(runs, config_cols, summary_cols):
             print(f'{i}/{len(runs)}')
 
     df = pd.DataFrame.from_dict(data_list_dics)
-    print(df.head())
+    # print(len(df), df.columns, df.iloc[0])
     return df
+
+
+def add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1):
+    df = df[CONFIG_COLS + cols].copy(deep=False)
+
+    # Filter frozen and fine-tuned runs
+    df_fz = df[df['serial'] == serial_fz].copy(deep=False)
+    df_ft = df[df['serial'] == serial_ft].copy(deep=False)
+
+    # renamed_metrics_fz = {m: f'{m}_fz' for m in cols}
+    renamed_metrics_ft = {m: f'{m}_ft' for m in cols}
+
+    # df_fz = df_fz.rename(columns=renamed_metrics_fz)
+    df_ft = df_ft.rename(columns=renamed_metrics_ft)
+
+    # print(len(df_fz), df_fz.columns, df_fz.iloc[0])
+    # print(len(df_ft), df_ft.columns, df_ft.iloc[0])
+
+    df_fz = df_fz.drop(columns=['serial'])
+    df_ft = df_ft.drop(columns=['serial'])
+    df_merged = pd.merge(df_fz, df_ft, how='left', on=['dataset_name', 'model_name'])
+
+    # print(len(df_merged), df_merged.columns, df_merged.iloc[0])
+
+    return df_merged
 
 
 def sort_save_df(df, fp, sort_cols=['serial']):
@@ -77,13 +105,14 @@ def parse_args():
     # Input
     parser.add_argument('--project_name', type=str, default='nycu_pcs/Hierarchical',
                         help='project_entity/project_name')
+
     # Filters
-    parser.add_argument('--serials', nargs='+', type=int, default=[23, 24])
+    parser.add_argument('--serials', nargs='+', type=int, default=[25, 26, 27, 28])
     parser.add_argument('--config_cols', nargs='+', type=str, default=CONFIG_COLS)
     parser.add_argument('--summary_cols', nargs='+', type=str, default=SUMMARY_COLS)
 
     # Output
-    parser.add_argument('--output_file', default='hierarchical_stage1.csv', type=str,
+    parser.add_argument('--output_file', default='hierarchical_feature_metrics.csv', type=str,
                         help='File path')
     parser.add_argument('--results_dir', type=str, default='data',
                         help='The directory where results will be stored')
@@ -102,6 +131,13 @@ def main():
     # Get W&B runs and create the initial DataFrame
     runs = get_wandb_project_runs(args.project_name, args.serials)
     df = make_df(runs, args.config_cols, args.summary_cols)
+
+    # add suffixes for ft and fz metrics
+    df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1)
+    df_merged_group2 = add_ft_fz_suffixes(df, serial_fz=26, serial_ft=28, cols=SUMMARY_COLS_GROUP2)
+
+    # merge into a single dataframe
+    df = pd.merge(df_merged_group1, df_merged_group2, how='left', on=['dataset_name', 'model_name'])
 
     # Sort and save the updated DataFrame
     sort_save_df(df, args.output_file, args.sort_cols)

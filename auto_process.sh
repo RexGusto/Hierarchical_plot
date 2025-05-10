@@ -1,74 +1,291 @@
-# download serial == 0 from https://wandb.ai/nycu_pcs/FGIRFT/ into fgirft_stage1.csv
-# wandb make scripts for stage 2 (seed) from stage 1 (lr)
-python download_save_wandb_data.py  --output_file fgirft_stage1_lr.csv
+#!/bin/bash
 
-# accuracy
-python summarize_acc.py
+# download
+# python download_save_wandb_data.py --serials 23 24 --output_file hierarchical_stage1.csv
+# python download_save_wandb_data.py --serials 23 --output_file hierarchical_ft_stage1.csv
+# python download_save_wandb_data_feature_metrics.py
 
-# cost not all have the same datasets so in order to get the average need to select a subset
-# default uses the subset from ufgir
-python summarize_cost.py
+# merge data from acc, corr metrics and pretraining stats
+# python merge_data.py
 
-hivit_base_patch16_224.orig_in21k hivit_base_patch16_224_miil.in21k hideit_base_patch16_224.fb_in1k hideit3_base_patch16_224.fb_in1k hideit3_base_patch16_224.fb_in22k_ft_in1k hivit_base_patch16_clip_224.laion2b hivit_base_patch16_224.mae hivit_base_patch16_224.in1k_mocov3 hivit_base_patch16_224.dino
-hiresnet50.tv_in1k hiresnet50.tv2_in1k hiresnet50.gluon_in1k hiresnet50.fb_swsl_ig1b_ft_in1k hiresnet50.fb_ssl_yfcc100m_ft_in1k hiresnet50.a1_in1k
+# lr script
+# python lr_script.py
 
-python plot.py --title "Max Accuracy FSL Resnets(Aircraft)" --keep_serials 23 --output_file max_resnet_fsl_acc(aircraft) --y_lim 90 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy FSL Resnets(Aircraft) fz" --keep_serials 24 --output_file max_resnet_fsl_acc(aircraft)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy SSL Resnets(Aircraft)" --keep_serials 23 --output_file max_resnet_ssl_acc(aircraft) --y_lim 85 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy SSL Resnets(Aircraft) fz" --keep_serials 24 --output_file max_resnet_ssl_acc(aircraft)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy FSL Resnets(CUB)" --keep_serials 23 --output_file max_resnet_fsl_acc(cub) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy FSL Resnets(CUB) fz" --keep_serials 24 --output_file max_resnet_fsl_acc(cub)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy SSL Resnets(CUB)" --keep_serials 23 --output_file max_resnet_ssl_acc(cub) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy SSL Resnets(CUB) fz" --keep_serials 24 --output_file max_resnet_ssl_acc(cub)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy FSL Resnets(Cars)" --keep_serials 23 --output_file max_resnet_fsl_acc(cars) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy FSL Resnets(Cars) fz" --keep_serials 24 --output_file max_resnet_fsl_acc(cars)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_fsl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy SSL Resnets(Cars)" --keep_serials 23 --output_file max_resnet_ssl_acc(cars) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy SSL Resnets(Cars) fz" --keep_serials 24 --output_file max_resnet_ssl_acc(cars)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family resnet_ssl --keep_datasets cars --summarized
+# python download_wandb_merge.py
 
-python plot.py --title "Max Accuracy FSL ViTs(Aircraft)" --keep_serials 23 --output_file max_vit_fsl_acc(aircraft) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy FSL ViTs(Aircraft) fz" --keep_serials 24 --output_file max_vit_fsl_acc(aircraft)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy SSL ViTs(Aircraft)" --keep_serials 23 --output_file max_vit_ssl_acc(aircraft) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy SSL ViTs(Aircraft) fz" --keep_serials 24 --output_file max_vit_ssl_acc(aircraft)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy FSL ViTs(CUB)" --keep_serials 23 --output_file max_vit_fsl_acc(cub) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy FSL ViTs(CUB) fz" --keep_serials 24 --output_file max_vit_fsl_acc(cub)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy SSL ViTs(CUB)" --keep_serials 23 --output_file max_vit_ssl_acc(cub) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy SSL ViTs(CUB) fz" --keep_serials 24 --output_file max_vit_ssl_acc(cub)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy FSL ViTs(Cars)" --keep_serials 23 --output_file max_vit_fsl_acc(cars) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy FSL ViTs(Cars) fz" --keep_serials 24 --output_file max_vit_fsl_acc(cars)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_fsl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy SSL ViTs(Cars)" --keep_serials 23 --output_file max_vit_ssl_acc(cars) --y_lim 80 100 --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets cars --summarized
-python plot.py --title "Max Accuracy SSL ViTs(Cars) fz" --keep_serials 24 --output_file max_vit_ssl_acc(cars)fz --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --method_family vit_ssl --keep_datasets cars --summarized
+# # # accuracy
+# python summarize_acc.py
 
-python plot.py --title "Learning Rate on FSL Resnet(Aircraft)" --keep_serials 23 --output_file lr_resnet_fsl(aircraft) --y_lim 85 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --method_family resnet_fsl --keep_datasets aircraft 
-python plot.py --title "Learning Rate on FSL Resnet(Aircraft)fz" --keep_serials 24 --output_file lr_resnet_fsl(aircraft)fz --y_lim 20 75 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --method_family resnet_fsl --keep_datasets aircraft 
-python plot.py --title "Learning Rate on SSL Resnet(Aircraft)" --keep_serials 23 --output_file lr_resnet_ssl(aircraft) --y_lim 85 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --method_family resnet_ssl --keep_datasets aircraft 
-python plot.py --title "Learning Rate on SSL Resnet(Aircraft)fz" --keep_serials 24 --output_file lr_resnet_ssl(aircraft)fz --y_lim 0 75 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --method_family resnet_ssl --keep_datasets aircraft 
+# # cost not all have the same datasets so in order to get the average need to select a subset
+# # default uses the subset from ufgir
+# python summarize_cost.py
 
-python plot.py --title "Learning Rate on FSL Resnet(Aircraft)" --keep_serials 23 --output_file lr_resnet_fsl(aircraft) --type_plot reg --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --method_family resnet_fsl --keep_datasets aircraft 
+datasets_array=('aircraft' 'cub' 'cars')
+serials=('23' '24')
 
-python plot.py --title "Learning Rate on Resnet(CUB)" --output_file lr_resnet(cub) --y_lim 60 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --keep_datasets cub 
-python plot.py --title "Standard Deviation ViT(Aircraft)" --output_file std_vit(aircraft) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets aircraft --summarized
-python plot.py --title "Standard Deviation ViT(CUB)" --output_file std_vit(cub) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets cub --summarized
-#python plot.py --title "Max Accuracy Resnets(CUB)" --output_file max_resnet_acc(cub) --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy ViTs(Aircraft)" --output_file max_vit_acc(aircraft) --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets aircraft --summarized
-python plot.py --title "Max Accuracy ViT(CUB)"--output_file max_vit_acc(cub) --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets cub --summarized
-python plot.py --title "Max Accuracy All" -output_file max_acc_all --y_label Accuracy(%) --y_var_name acc_max --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_dataset aircraft cub --summarized
-python plot.py --title "Overall Accuracy Resnets(Aircraft)" --output_file ov_max_acc_resnet(aircraft) --y_label Accuracy(%) --y_var_name acc --x_var_name method --type_plot box --input_file data\hierarchical_test.csv --keep_datasets aircraft
-python plot.py --title "Overall Accuracy Resnets(CUB)" --output_file ov_max_acc_resnet(cub) --y_label Accuracy(%) --y_var_name acc --x_var_name method --type_plot box --input_file data\hierarchical_test.csv --keep_datasets cub
-python plot.py --title "Overall Accuracy ViTs(Aircraft)" --output_file ov_max_acc_vit(aircraft) --y_label Accuracy(%) --y_var_name acc --x_var_name method --type_plot box --input_file data\hierarchical_test.csv --keep_datasets aircraft
-python plot.py --title "Overall Accuracy ViTs(CUB)" --output_file ov_max_acc_vit(cub) --y_label Accuracy(%) --y_var_name acc --x_var_name method --type_plot box --input_file data\hierarchical_test.csv --keep_datasets cub
-python plot.py --title "Overall Accuracy All" --output_file ov_max_acc --y_label Accuracy(%) --y_var_name acc --x_var_name method --type_plot box --input_file data\hierarchical_test.csv --keep_datasets aircraft cub
-python plot.py --title "Learning Rate on Resnet(Aircraft)" --output_file lr_resnet(aircraft) --y_lim 85 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --keep_datasets aircraft 
-python plot.py --title "Learning Rate on Resnet(CUB)" --output_file lr_resnet(cub) --y_lim 60 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --keep_datasets cub 
-python plot.py --title "Learning Rate on ViT(Aircraft)" --output_file lr_vit(aircraft) --loc_legend "upper left" --y_lim 60 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --keep_datasets aircraft
-python plot.py --title "Learning Rate on ViT(CUB)" --output_file lr_vit(cub) --loc_legend "upper center" --y_lim 40 100 --x_label "Learning Rate" --y_label Accuracy(%) --hue_var_name method --y_var_name acc --x_var_name lr --input_file data\hierarchical_test.csv --keep_datasets cub 
-python plot.py --title "Standard Deviation Resnet(Aircraft)" --output_file std_resnet(aircraft) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets aircraft --summarized 
-python plot.py --title "Standard Deviation Resnet(CUB)" --output_file std_resnet(cub) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets cub --summarized
-python plot.py --title "Standard Deviation ViT(Aircraft)" --output_file std_vit(aircraft) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets aircraft --summarized
-python plot.py --title "Standard Deviation ViT(CUB)" --output_file std_vit(cub) --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets cub --summarized
-python plot.py --title "Standard Deviation All" --output_file std_all --y_label Standard Deviation --y_var_name acc_std --x_var_name method --input_file results_all\acc\summarized_acc_hierarchical_main.csv --keep_datasets aircraft cub --summarized
-python plot.py --title "Resnet Throughput" --output_file throughput_resnet --y_label Throughput --y_var_name tp_train --x_var_name method --input_file results_all\cost\cost_hierarchical.csv --summarized
-python plot.py --title "ViT Throughput" --output_file throughput_vit --y_label Throughput --y_var_name tp_train --x_var_name method --input_file results_all\cost\cost_hierarchical.csv --summarized
+all_resnet=('hiresnet50.tv_in1k' 'hiresnet50.tv2_in1k' 'hiresnet50.gluon_in1k' 'hiresnet50.fb_swsl_ig1b_ft_in1k' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k' 'hiresnet50.a1_in1k' 'hiresnet50.in1k_mocov3' 'hiresnet50.in1k_spark' 'hiresnet50.in1k_supcon' 'hiresnet50.in1k_swav' 'hiresnet50.in21k_miil' 'hiresnet50.tv_in1k_fz' 'hiresnet50.tv2_in1k_fz' 'hiresnet50.gluon_in1k_fz' 'hiresnet50.fb_swsl_ig1b_ft_in1k_fz' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz' 'hiresnet50.a1_in1k_fz' 'hiresnet50.in1k_mocov3_fz' 'hiresnet50.in1k_spark_fz' 'hiresnet50.in1k_supcon_fz' 'hiresnet50.in1k_swav_fz' 'hiresnet50.in21k_miil_fz')
+all_vit=('hivit_base_patch16_224.orig_in21k' 'hivit_base_patch16_224_miil.in21k' 'hideit_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in22k_ft_in1k' 'hivit_base_patch16_clip_224.laion2b' 'hivit_base_patch16_224.mae' 'hivit_base_patch16_224.in1k_mocov3' 'hivit_base_patch16_224.dino' 'hivit_base_patch16_siglip_224.v2_webli' 'hivit_base_patch16_224.orig_in21k_fz' 'hivit_base_patch16_224_miil.in21k_fz' 'hideit_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz' 'hivit_base_patch16_clip_224.laion2b_fz' 'hivit_base_patch16_224.mae_fz' 'hivit_base_patch16_224.in1k_mocov3_fz' 'hivit_base_patch16_224.dino_fz' 'hivit_base_patch16_siglip_224.v2_webli_fz')
 
+all_resnet_nofz=('hiresnet50.tv_in1k' 'hiresnet50.tv2_in1k' 'hiresnet50.gluon_in1k' 'hiresnet50.fb_swsl_ig1b_ft_in1k' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k' 'hiresnet50.a1_in1k' 'hiresnet50.in1k_mocov3' 'hiresnet50.in1k_spark' 'hiresnet50.in1k_supcon' 'hiresnet50.in1k_swav' 'hiresnet50.in21k_miil')
+all_vit_nofz=('hivit_base_patch16_224.orig_in21k' 'hivit_base_patch16_224_miil.in21k' 'hideit_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in22k_ft_in1k' 'hivit_base_patch16_clip_224.laion2b' 'hivit_base_patch16_224.mae' 'hivit_base_patch16_224.in1k_mocov3' 'hivit_base_patch16_224.dino' 'hivit_base_patch16_siglip_224.v2_webli')
 
-python plot.py --output_file test --y_var_name acc --input_file data\hierarchical_test.csv
-python plot.py --output_file test --y_var_name acc --input_file data\hierarchical_test.csv --fig_size 12 6 
+all_resnet_onlyfz=('hiresnet50.tv_in1k_fz' 'hiresnet50.tv2_in1k_fz' 'hiresnet50.gluon_in1k_fz' 'hiresnet50.fb_swsl_ig1b_ft_in1k_fz' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz' 'hiresnet50.a1_in1k_fz' 'hiresnet50.in1k_mocov3_fz' 'hiresnet50.in1k_spark_fz' 'hiresnet50.in1k_supcon_fz' 'hiresnet50.in1k_swav_fz' 'hiresnet50.in21k_miil_fz')
+all_vit_onlyfz=('hivit_base_patch16_224.orig_in21k_fz' 'hivit_base_patch16_224_miil.in21k_fz' 'hideit_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz' 'hivit_base_patch16_clip_224.laion2b_fz' 'hivit_base_patch16_224.mae_fz' 'hivit_base_patch16_224.in1k_mocov3_fz' 'hivit_base_patch16_224.dino_fz' 'hivit_base_patch16_siglip_224.v2_webli_fz')
+
+all_models=("${all_resnet[@]}" "${all_vit[@]}")
+all_models_ft=("${all_resnet_nofz[@]}" "${all_vit_nofz[@]}")
+all_models_fz=("${all_resnet_onlyfz[@]}" "${all_vit_onlyfz[@]}")
+
+resnet_fsl=('hiresnet50.tv_in1k' 'hiresnet50.tv2_in1k' 'hiresnet50.gluon_in1k' 'hiresnet50.a1_in1k' 'hiresnet50.in21k_miil' 'hiresnet50.tv_in1k_fz' 'hiresnet50.tv2_in1k_fz' 'hiresnet50.gluon_in1k_fz' 'hiresnet50.a1_in1k_fz' 'hiresnet50.in21k_miil_fz')
+resnet_semisl=('hiresnet50.fb_swsl_ig1b_ft_in1k' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k' 'hiresnet50.fb_swsl_ig1b_ft_in1k_fz' 'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz')
+resnet_generative=('hiresnet50.in1k_spark' 'hiresnet50.in1k_spark_fz')
+resnet_discrim=('hiresnet50.in1k_mocov3' 'hiresnet50.in1k_supcon' 'hiresnet50.in1k_swav' 'hiresnet50.in1k_mocov3_fz' 'hiresnet50.in1k_supcon_fz' 'hiresnet50.in1k_swav_fz')
+
+vit_fsl=('hivit_base_patch16_224.orig_in21k' 'hivit_base_patch16_224_miil.in21k' 'hideit_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in1k' 'hideit3_base_patch16_224.fb_in22k_ft_in1k' 'hivit_base_patch16_224.orig_in21k_fz' 'hivit_base_patch16_224_miil.in21k_fz' 'hideit_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in1k_fz' 'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz')
+vit_generative=('hivit_base_patch16_224.mae' 'hivit_base_patch16_224.mae_fz')
+vit_discrim=('hivit_base_patch16_clip_224.laion2b' 'hivit_base_patch16_224.in1k_mocov3' 'hivit_base_patch16_224.dino' 'hivit_base_patch16_siglip_224.v2_webli' 'hivit_base_patch16_clip_224.laion2b_fz' 'hivit_base_patch16_224.in1k_mocov3_fz' 'hivit_base_patch16_224.dino_fz' 'hivit_base_patch16_siglip_224.v2_webli_fz')
+
+input_csv="data/hierarchical_test.csv"
+
+# name="acc_max_vs_in1kacc"
+# base_cmd="python plot.py --y_var_name acc_max --type_plot reg --fig_size 6 4 --summarized --loc_legend 'lower left' --results_dir results_all/plots/${name}"
+# for dataset in "${datasets_array[@]}";do
+#     for serial in "${serials[@]}"; do
+#         if [[ "$serial" -eq 24 ]]; then
+#             model_array=${all_vit_onlyfz[*]}
+#             prefix="FZ"
+#         else
+#             model_array=${all_vit_nofz[*]}
+#             prefix="FT"
+#         fi
+#         output_file="${name}_reg_resnet_${dataset}_${prefix}"
+#         cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv --title '' --x_var_name acc_in1k --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${all_resnet[*]} --output_file ${output_file}"
+#         echo "Running: ${cmd}"
+#         eval "${cmd}"
+#     done
+# done
+
+# for dataset in "${datasets_array[@]}";do
+#     for serial in "${serials[@]}"; do
+#         if [[ "$serial" -eq 24 ]]; then
+#             model_array=${all_vit_onlyfz[*]}
+#             prefix="FZ"
+#         else
+#             model_array=${all_vit_nofz[*]}
+#             prefix="FT"
+#         fi
+#         output_file="${name}_reg_vit_${dataset}_${prefix}"
+#         cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv --title '' --x_var_name acc_in1k --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${all_vit[*]} --output_file ${output_file}"
+#         echo "Running: ${cmd}"
+#         eval "${cmd}"
+#     done
+# done
+# # Per architecture (combined)
+# for dataset in "${datasets_array[@]}";do
+#     for serial in "${serials[@]}"; do
+#         if [[ "$serial" -eq 24 ]]; then
+#             model_used=${all_models_fz[*]}
+#             add_cmd="--y_var_name acc_max --x_var_name acc_in1k"
+#             prefix="FZ"
+#         else
+#             model_used=${all_models_ft[*]}
+#             add_cmd="--y_var_name acc_max --x_var_name acc_in1k"
+#             prefix="FT"
+#         fi
+#         output_file="${name}_reg_both_${dataset}_${prefix}"
+#         cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${model_used[*]} --output_file ${output_file}"
+#         echo "Running: ${cmd}"
+#         eval "${cmd}"
+#     done
+# done
+
+# #ft & fz combined
+# for dataset in "${datasets_array[@]}";do
+#     output_file="${name}_reg_both_${dataset}_FT_FZ"
+#     add_cmd="--y_var_name acc_max --x_var_name acc_in1k"
+#     cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serials[*]} --keep_methods ${all_models[*]} --output_file ${output_file}"
+#     echo "Running: ${cmd}"
+#     eval "${cmd}"
+# done
+
+# # All models performance
+# base_cmd="python plot.py --y_label 'Accuracy(%)' --y_var_name acc --x_var_name method --x_rotation 45 --type_plot box --loc_legend 'lower left' --hue_var_name dataset_name --fig_size 12 8 --results_dir results_all/plots/all_model_performance"
+# for serial in "${serials[@]}"; do
+#     if [[ "$serial" -eq 24 ]]; then
+#         model_array=${all_resnet_onlyfz[*]}
+#         prefix="Frozen"
+#     else
+#         model_array=${all_resnet_nofz[*]}
+#         prefix="Fine Tuned"
+#     fi
+#     output_file="resnet_models_performance_serial_${serial}"
+#     cmd="${base_cmd} --input_file ${input_csv} --keep_serials ${serial} --keep_methods ${model_array[*]} --output_file ${output_file} --title 'Resnet Models Perfromance ${prefix}'"
+#     echo "Running: ${cmd}"
+#     eval "${cmd}"
+# done
+
+# for serial in "${serials[@]}"; do
+#     if [[ "$serial" -eq 24 ]]; then
+#         model_array=${all_vit_onlyfz[*]}
+#         prefix="Frozen"
+#     else
+#         model_array=${all_vit_nofz[*]}
+#         prefix="Fine Tuned"
+#     fi
+#     output_file="vit_models_performance_serial_${serial}"
+#     cmd="${base_cmd} --input_file ${input_csv} --keep_serials ${serial} --keep_methods ${model_array[*]} --output_file ${output_file} --title 'ViT Models Perfromance ${prefix}'"
+#     echo "Running: ${cmd}"
+#     eval "${cmd}"
+# done
+
+top3_best_models=('hiresnet50.in1k_mocov3' 'hiresnet50.in1k_swav' 'hiresnet50.tv2_in1k' 'hiresnet50.in1k_spark' 'hiresnet50.in21k_miil' 'hivit_base_patch16_224.orig_in21k' 'hideit3_base_patch16_224.fb_in22k_ft_in1k' 'hivit_base_patch16_siglip_224.v2_webli' 'hivit_base_patch16_224.dino' 'hivit_base_patch16_clip_224.laion2b')
+# ViT best vs resnet best
+base_cmd="python plot.py --y_label 'Accuracy(%)' --y_var_name acc --hue_var_name dataset_name --x_rotation 15 --x_var_name method --type_plot box --loc_legend 'lower left' --hue_var_name dataset_name --fig_size 12 8 --results_dir results_all/plots/all_model_performance"
+output_file="top3_best_models_plot"
+cmd="${base_cmd} --input_file ${input_csv} --keep_serials 23 --keep_methods ${top3_best_models[*]} --output_file ${output_file} --title 'Top-3 Best & Top-2 Worst for Both Architecture' --keep_datasets ${datasets_array[*]}"
+echo "Running: ${cmd}"
+eval "${cmd}"
+
+# # Difference of maximum accuracy per model 
+# base_cmd="python plot.py --y_label 'Accuracy(%)' --y_var_name acc_max --type_plot box --fig_size 10 6 --summarized --results_dir results_all/plots/dif_max_acc"
+# output_file="max_models_performance"
+# cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv --keep_serials ${serials[*]} --x_label 'Datasets' --x_var_name dataset_name --hue_var_name serial --keep_methods ${all_resnet[*]} --keep_datasets ${datasets_array[*]} --output_file ${output_file} --title 'Max Accuracies Difference Between Resnet Models'"
+# echo "Running: ${cmd}"
+# eval "${cmd}"
+
+# base_cmd="python plot.py --y_label 'Accuracy(%)' --y_var_name acc_max --type_plot box --fig_size 10 6 --summarized --results_dir results_all/plots/dif_max_acc"
+# output_file="max_models_performance_vit"
+# cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv --keep_serials ${serials[*]} --x_label 'Datasets' --x_var_name dataset_name --hue_var_name serial --keep_methods ${all_vit[*]} --keep_datasets ${datasets_array[*]} --output_file ${output_file} --title 'Max Accuracies Difference Between ViT Models'"
+# echo "Running: ${cmd}"
+# eval "${cmd}"
+
+# methods=('resnet' 'vit')
+# metrics=('clustering_diversity_train' 'spectral_diversity_train')
+         
+#         #  'MSC_train' 'MSC_val' 'V_intra_train' 'V_intra_val' 'S_inter_train' 'S_inter_val'
+#         #  'cis_clustering_train' 'cis_clustering_val' 'cis_spectral_train' 'cis_spectral_val')'cka_avg_train' 'cka_avg_test' 'dist_avg_train' 'dist_avg_test' 'dist_norm_avg_train' 'dist_norm_avg_test' 'l2_norm_avg_train' 'l2_norm_avg_test'
+#         #  'cka_0_train' 'cka_0_test' 'cka_high_mean_train' 'cka_mid_mean_train' 'cka_low_mean_train'
+#         #  'cka_high_mean_test' 'cka_mid_mean_test' 'cka_low_mean_test'
+
+# for metric in "${metrics[@]}"; do
+#     name="acc_max_vs_${metric,,}"
+#     base_cmd="python plot.py --type_plot reg --fig_size 6 4 --summarized --results_dir results_all/plots/${name}"
+
+#     # Per architecture (not combined) 
+#     for dataset in "${datasets_array[@]}";do
+#         for serial in "${serials[@]}"; do
+#             for method in "${methods[@]}"; do
+#                 if [[ "$serial" -eq 24 ]]; then
+#                     prefix="FZ"
+#                     add_cmd="--y_var_name last_acc --x_var_name ${metric}"
+#                 else
+#                     prefix="FT"
+#                     add_cmd="--y_var_name acc_max --x_var_name ${metric}_ft"
+#                 fi
+
+#                 if [[ "$method" == "resnet" ]]; then
+#                     model_used=${all_resnet[*]}
+#                     model_label="RN"
+#                 else
+#                     model_used=${all_vit[*]}
+#                     model_label="ViT"
+#                 fi
+
+#                 output_file="${name}_reg_${method}_${dataset}_${prefix}"
+#                 cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${model_used[*]} --output_file ${output_file}"
+#                 echo "Running: ${cmd}"
+#                 eval "${cmd}"
+#             done
+#         done
+#     done
+
+#     # Per architecture (combined)
+#     for dataset in "${datasets_array[@]}";do
+#         for serial in "${serials[@]}"; do
+#             if [[ "$serial" -eq 24 ]]; then
+#                 model_used=${all_models_fz[*]}
+#                 add_cmd="--y_var_name last_acc --x_var_name ${metric}"
+#                 prefix="FZ"
+#             else
+#                 model_used=${all_models_ft[*]}
+#                 add_cmd="--y_var_name acc_max --x_var_name ${metric}_ft"
+#                 prefix="FT"
+#             fi
+#             output_file="${name}_reg_both_${dataset}_${prefix}"
+#             cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${model_used[*]} --output_file ${output_file}"
+#             echo "Running: ${cmd}"
+#             eval "${cmd}"
+#         done
+#     done
+
+#     #ft & fz combined
+#     for dataset in "${datasets_array[@]}";do
+#         output_file="${name}_reg_both_${dataset}_FT_FZ"
+#         add_cmd="--y_var_name acc_combined --x_var_name ${metric}_combined"
+#         cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serials[*]} --keep_methods ${all_models[*]} --output_file ${output_file}"
+#         echo "Running: ${cmd}"
+#         eval "${cmd}"
+#     done
+# done
+
+# states=('train' 'test')
+# # 'cka_11_train' 'cka_11_test' 'cka_15_train' 'cka_15_test'
+# for state in "${states[@]}"; do
+#     name="acc_max_vs_cka_last_layer_${state}"
+#     base_cmd="python plot.py --type_plot reg --fig_size 6 4 --summarized --results_dir results_all/plots/${name}"
+
+#     for dataset in "${datasets_array[@]}"; do
+#         for serial in "${serials[@]}"; do
+#             for method in "${methods[@]}"; do
+#                 if [[ "$method" == "resnet" ]]; then
+#                     model_used=${all_resnet[*]}
+#                     metric=cka_15_${state}
+#                 else
+#                     model_used=${all_vit[*]}
+#                     metric=cka_11_${state}
+#                 fi
+
+#                 if [[ "$serial" -eq 24 ]]; then
+#                     prefix="FZ"
+#                     add_cmd="--y_var_name acc_max --x_var_name ${metric}"
+#                 else
+#                     prefix="FT"
+#                     add_cmd="--y_var_name last_acc --x_var_name ${metric}_ft"
+#                 fi
+
+#                 output_file="${name}_reg_${method}_${dataset}_${prefix}"
+#                 cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_serials ${serial} --keep_datasets ${dataset} --keep_methods ${model_used[*]} --output_file ${output_file}"
+#                 echo "Running: ${cmd}"
+#                 eval "${cmd}"
+#             done
+#         done
+#     done
+
+#     # Per architecture (combined)
+#     for dataset in "${datasets_array[@]}";do
+#         for serial in "${serials[@]}"; do
+#             if [[ "$serial" -eq 24 ]]; then
+#                 model_used=${all_models_fz[*]}
+#                 add_cmd="--y_var_name last_acc --x_var_name cka_last_combined_${state}"
+#                 prefix="FZ"
+#             else
+#                 model_used=${all_models_ft[*]}
+#                 add_cmd="--y_var_name acc_max --x_var_name cka_last_combined_${state}_ft"
+#                 prefix="FT"
+#             fi
+#             output_file="${name}_reg_both_${dataset}_${prefix}"
+#             cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serial} --keep_methods ${model_used[*]} --output_file ${output_file}"
+#             echo "Running: ${cmd}"
+#             eval "${cmd}"
+#         done
+#     done
+
+#     #ft & fz combined
+#     for dataset in "${datasets_array[@]}";do
+#         output_file="${name}_reg_both_${dataset}_FT_FZ"
+#         add_cmd="--y_var_name acc_combined --x_var_name cka_last_combined_${state}_combined"
+#         cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serials[*]} --keep_methods ${all_models[*]} --output_file ${output_file}"
+#         echo "Running: ${cmd}"
+#         eval "${cmd}"
+#     done
+# done
