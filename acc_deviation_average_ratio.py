@@ -51,10 +51,14 @@ def compute_ada_ratio(df, args):
     model_stds = df.groupby(['serial','method', 'setting'], as_index=False).std(numeric_only=True)
     model_stds['dataset_name'] = 'all_std'
 
-    df = pd.concat([df, dataset_avgs, dataset_stds, model_avgs, model_stds], axis=0)
+    df_concat = pd.concat([df, dataset_avgs, dataset_stds, model_avgs, model_stds], axis=0)
 
     output_file = os.path.join(args.results_dir, f'{args.output_file}.csv')
-    df.to_csv(output_file, header=True, index=False)
+    # df.to_csv(output_file, header=True, index=False)
+
+    # df_concat is to create the csv with the 'all_mean' & 'all_std'
+    # df is used for the subset to avoid index overlapping issue for the subset making
+    df_concat.to_csv(output_file, header=True, index=False)
 
     model_avgs.to_csv(output_file.replace('.csv', '_models.csv'), header=True, index=False)
     dataset_avgs.to_csv(output_file.replace('.csv', '_datasets.csv'), header=True, index=False)
@@ -101,25 +105,26 @@ def make_acc_dist_subset(args, df, df_ada):
         median_ds, median_model, median_setting = df_ada_sorted.loc[median_idx, cols]
         max_ds, max_model, max_setting = df_ada.loc[max_idx, cols]
         min_ds, min_model, min_setting = df_ada.loc[min_idx, cols]
+        print(df_ada.loc[20, cols])
 
         subset_median = df[(df['dataset_name'] == median_ds) &
                         (df['method'] == median_model) &
                         (df['serial'] == median_setting)][cols_acc]
         subset_median['Ratio'] = 'Median'
         subset_median['ada_ratio'] = df_ada_sorted.loc[median_idx, 'ada_ratio']
-        print(subset_median)
 
         subset_max = df[(df['dataset_name'] == max_ds) &
                         (df['method'] == max_model) &
                         (df['serial'] == max_setting)][cols_acc]
         subset_max['Ratio'] = 'Max'
         subset_max['ada_ratio'] = df_ada.loc[max_idx, 'ada_ratio']
-
+        print(min_ds)
         subset_min = df[(df['dataset_name'] == min_ds) &
                         (df['method'] == min_model) &
                         (df['serial'] == min_setting)][cols_acc]
         subset_min['Ratio'] = 'Min'
         subset_min['ada_ratio'] = df_ada.loc[min_idx, 'ada_ratio']
+        print(subset_min)
 
         subsets = pd.concat([subset_min, subset_median, subset_max], axis=0)
 
@@ -248,7 +253,7 @@ def parse_args():
     parser.add_argument('--keep_methods', nargs='+', type=str, default=None)
     parser.add_argument('--filter_datasets', nargs='+', type=str, default=None)
     parser.add_argument('--filter_methods', nargs='+', type=str, default=None)
-    parser.add_argument('--keep_serials', nargs='+', type=int, default=[23])
+    parser.add_argument('--keep_serials', nargs='+', type=int, default=[23, 24])
 
     # Change location of legend
     parser.add_argument('--loc_legend', type=str, default='lower left',

@@ -17,9 +17,9 @@ SUMMARY_COLS_GROUP1 = [
     'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
 ]
 SUMMARY_COLS_GROUP2 = [
-    'MSC_train', 'MSC_val', 'V_intra_train', 'V_intra_val', 'S_inter_train', 'S_inter_val',
-    'clustering_diversity_train', 'clustering_diversity_val',
-    'spectral_diversity_train', 'spectral_diversity_val',
+    'MSC_train', 'MSC_test', 'V_intra_train', 'V_intra_test', 'S_inter_train', 'S_inter_test',
+    'clustering_diversity_train', 'clustering_diversity_test',
+    'spectral_diversity_train', 'spectral_diversity_test',
 ]
 SUMMARY_COLS = SUMMARY_COLS_GROUP1 + SUMMARY_COLS_GROUP2
 

@@ -37,6 +37,7 @@ def combine_z_score(df):
                 on='method',
                 suffixes=('', '_z_score')
             )
+            combined_df['penalized_acc'] = combined_df['acc_max'] - combined_df['acc_std_z_score']
 
             result.append(combined_df)
 

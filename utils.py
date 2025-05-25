@@ -272,13 +272,14 @@ def load_df(input_file):
 
     df = add_setting(df)
 
-    df.rename(columns={'val_acc_species': 'acc'}, inplace=True)
+    df.rename(columns={'val_acc_level1': 'acc'}, inplace=True)
+    df.rename(columns={'val_acc_level2': 'acc_2'}, inplace=True)
     return df
 
 
 def keep_columns(df, type='acc'):
     if type == 'acc':
-        keep = ['acc', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'augreg', 'acc_in1k', 'cka_avg_test', 'cka_avg_train',
+        keep = ['acc', 'acc_2', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'augreg', 'acc_in1k', 'cka_avg_test', 'cka_avg_train',
                 'dist_avg_train', 'dist_avg_test', 'dist_norm_avg_train', 'dist_norm_avg_test',
                 'l2_norm_avg_train', 'l2_norm_avg_test',
                 'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
@@ -289,14 +290,14 @@ def keep_columns(df, type='acc'):
                 'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
                 'cka_high_mean_train_ft', 'cka_mid_mean_train_ft', 'cka_low_mean_train_ft',
                 'cka_high_mean_test_ft', 'cka_mid_mean_test_ft', 'cka_low_mean_test_ft',
-                'MSC_train', 'MSC_val', 'V_intra_train', 'V_intra_val',
-                'S_inter_train', 'S_inter_val',
-                'clustering_diversity_train', 'clustering_diversity_val', 'lr',
-                'spectral_diversity_train', 'spectral_diversity_val',
-                'MSC_train_ft', 'MSC_val_ft', 'V_intra_train_ft', 'V_intra_val_ft',
-                'S_inter_train_ft', 'S_inter_val_ft',
-                'clustering_diversity_train_ft', 'clustering_diversity_val_ft',
-                'spectral_diversity_train_ft', 'spectral_diversity_val_ft']
+                'MSC_train', 'MSC_test', 'V_intra_train', 'V_intra_test',
+                'S_inter_train', 'S_inter_test',
+                'clustering_diversity_train', 'clustering_diversity_test', 'lr',
+                'spectral_diversity_train', 'spectral_diversity_test',
+                'MSC_train_ft', 'MSC_test_ft', 'V_intra_train_ft', 'V_intra_test_ft',
+                'S_inter_train_ft', 'S_inter_test_ft',
+                'clustering_diversity_train_ft', 'clustering_diversity_test_ft',
+                'spectral_diversity_train_ft', 'spectral_diversity_test_ft']
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
                 'flops', 'max_memory']
