@@ -29,11 +29,11 @@ def combine_z_score(df):
         serial_df = df[df['serial'] == serial]
         for dataset in datasets:
             dataset_df = serial_df[serial_df['dataset_name'] == dataset]
-            z_score_df = compute_z_scores(dataset_df, ['acc', 'acc_std', 'acc_max', 'acc_min'])
+            z_score_df = compute_z_scores(dataset_df, ['acc_mean', 'acc_std', 'acc_max', 'acc_min'])
 
-            combined_df = dataset_df[['serial', 'dataset_name', 'method', 'acc', 'acc_std', 'acc_max', 'acc_min']].copy()
+            combined_df = dataset_df[['serial', 'dataset_name', 'method', 'acc_mean', 'acc_std', 'acc_max', 'acc_min']].copy()
             combined_df = combined_df.merge(
-                z_score_df[['method', 'acc', 'acc_std', 'acc_max', 'acc_min']],
+                z_score_df[['method', 'acc_mean', 'acc_std', 'acc_max', 'acc_min']],
                 on='method',
                 suffixes=('', '_z_score')
             )
@@ -68,7 +68,8 @@ def parse_args():
 
     # input
     parser.add_argument('--input_file', type=str, 
-                        default=os.path.join('results_all', 'acc/summarized_acc_hierarchical_main.csv'),
+                        default=os.path.join('results_all', 'acc',
+                                             'summary_val_acc_level1_main.csv'),
                         help='filename for input .csv file from wandb')
 
     parser.add_argument('--keep_datasets', nargs='+', type=str, default=None)
@@ -78,7 +79,7 @@ def parse_args():
     parser.add_argument('--keep_serials', nargs='+', type=int, default=[23, 24])
 
     # output
-    parser.add_argument('--output_file', type=str, default='z_score_hierarchical',
+    parser.add_argument('--output_file', type=str, default='z_score',
                         help='filename for output .csv file')
     parser.add_argument('--results_dir', type=str,
                         default=os.path.join('results_all', 'z_score'),

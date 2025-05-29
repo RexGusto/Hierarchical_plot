@@ -2,23 +2,22 @@
 
 # download
 # python download_save_wandb_data.py --serials 23 24 --output_file hierarchical_stage1.csv
-# python download_save_wandb_data.py --serials 23 --output_file hierarchical_ft_stage1.csv
 # python download_save_wandb_data_feature_metrics.py
 
 # merge data from acc, corr metrics and pretraining stats
-# python merge_data.py
+# python merge_acc_metrics_stats.py
 
 # lr script
 # python lr_script.py
 
-# python download_wandb_merge.py
 
 # # # accuracy
 # python summarize_acc.py
 
-# # cost not all have the same datasets so in order to get the average need to select a subset
-# # default uses the subset from ufgir
+# # cost metrics including flops, no params, trainable params
 # python summarize_cost.py
+# python summarize_cost.py --acc_to_use val_acc_level2 --output_file cost_val_acc_level2
+# python summarize_cost.py --acc_to_use ap_w --output_file cost_ap_w
 
 datasets_array=('aircraft' 'cub' 'cars')
 serials=('23' '24')
@@ -255,7 +254,7 @@ for accuracy in "${accuracies[@]}"; do
         # Plots for ViT+RN+FT+FZ 
         for dataset in "${datasets_array[@]}";do
             output_file="${name}_both_${dataset}_FT_FZ"
-            add_cmd="--y_var_name ${accuracy}_combined --x_var_name ${metric}_combined"
+            add_cmd="--y_var_name ${accuracy}_matched --x_var_name ${metric}_matched"
             cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main${csv_suffix}.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serials[*]} --keep_methods ${all_models[*]} --output_file ${output_file}"
             echo "Running: ${cmd}"
             eval "${cmd}"
@@ -309,12 +308,12 @@ for accuracy in "${accuracies[@]}"; do
             for serial in "${serials[@]}"; do
                 if [[ "$serial" -eq 24 ]]; then
                     model_used=${all_models_fz[*]}
-                    # add_cmd="--y_var_name last_acc --x_var_name cka_last_combined_${state}"
-                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_combined_${state}"
+                    # add_cmd="--y_var_name last_acc --x_var_name cka_last_matched_${state}"
+                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_matched_${state}"
                     prefix="FZ"
                 else
                     model_used=${all_models_ft[*]}
-                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_combined_${state}_ft"
+                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_matched_${state}_ft"
                     prefix="FT"
                 fi
                 output_file="${name}_reg_both_${dataset}_${prefix}"
@@ -330,13 +329,13 @@ for accuracy in "${accuracies[@]}"; do
                 # acc_fz vs metric_ft
                 if [[ "$serial" -eq 24 ]]; then
                     model_used=${all_models_fz[*]}
-                    # add_cmd="--y_var_name last_acc --x_var_name cka_last_combined_${state}"
-                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_combined_${state}_ft"
+                    # add_cmd="--y_var_name last_acc --x_var_name cka_last_matched_${state}"
+                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_matched_${state}_ft"
                     alter_name="${accuracy}_max_fz_vs_cka_last_layer_${state}_ft"
                 # acc_ft vs metric_fz
                 else
                     model_used=${all_models_ft[*]}
-                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_combined_${state}"
+                    add_cmd="--y_var_name ${accuracy}_max --x_var_name cka_last_matched_${state}"
                     alter_name="${accuracy}_max_ft_vs_cka_last_layer_${state}_fz"
                 fi
                 output_file="${alter_name}_reg_both_${dataset}_FZ_v_FT"
@@ -349,7 +348,7 @@ for accuracy in "${accuracies[@]}"; do
         # Plots for ViT+RN+FT+FZ 
         for dataset in "${datasets_array[@]}";do
             output_file="${name}_reg_both_${dataset}_FT_FZ"
-            add_cmd="--y_var_name acc_combined --x_var_name cka_last_combined_${state}_combined"
+            add_cmd="--y_var_name acc_matched --x_var_name cka_last_matched_${state}_matched"
             cmd="${base_cmd} --input_file results_all/acc/summarized_acc_hierarchical_main.csv ${add_cmd} --title '' --keep_datasets ${dataset} --keep_serials ${serials[*]} --keep_methods ${all_models[*]} --output_file ${output_file}"
             echo "Running: ${cmd}"
             eval "${cmd}"

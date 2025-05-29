@@ -6,12 +6,12 @@ import pandas as pd
 
 CONFIG_COLS = [
     'serial', 'dataset_name', 'model_name',
-    # 'freeze_backbone', 'classifier', 'adapter', 'prompt', 
 ]
 
 SUMMARY_COLS_GROUP1 = [
     'cka_avg_test', 'cka_avg_train', 'dist_avg_train', 'dist_avg_test',
     'dist_norm_avg_train', 'dist_norm_avg_test', 'l2_norm_avg_train', 'l2_norm_avg_test',
+    'dist_0_train', 'dist_0_test', 'dist_11_train', 'dist_11_test', 'dist_15_train', 'dist_15_test',
     'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
     'cka_high_mean_train', 'cka_mid_mean_train', 'cka_low_mean_train',
     'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',

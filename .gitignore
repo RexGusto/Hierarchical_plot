@@ -15,6 +15,7 @@
 #*.csv
 
 # directories
+**/old/*
 **/ckpts/
 **/flagged/
 **/wandb/

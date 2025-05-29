@@ -3,12 +3,11 @@ import argparse
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
-from sklearn.metrics import r2_score
-import scipy.stats as stats
 
 from utils import filter_df, rename_vars, drop_na, preprocess_df, \
     METHODS_VIT, METHODS_RESNET
+from compute_correlations import compute_correlations
+
 
 def make_plot(args, df):
     # Seaborn Style Settings
@@ -36,31 +35,34 @@ def make_plot(args, df):
     elif args.type_plot == 'reg':
         ax = sns.regplot(x=args.x_var_name, y=args.y_var_name, data=df)
 
-        # # if args.plot_model:
-        # for i, row in df.iterrows():
-        #     fz = '(FZ)' if row['Status'] == 'FZ' else '(FT)'
-        #     text =  row['Method'] + fz
-        #     ax.text(row[args.x_var_name], row[args.y_var_name], text, fontsize=8)
+        if args.add_text_methods:
+            for i, row in df.iterrows():
+                fz = '(FZ)' if row['Status'] == 'FZ' else '(FT)'
+                text =  row['Method'] + fz
+                ax.text(row[args.x_var_name], row[args.y_var_name], text,
+                        color='black', ha='center', va='bottom',
+                        fontsize=args.font_size_methods)
 
-        # Compute correlations
-        spearman_corr, pearson_corr, r_squared = compute_correlations(df, args.x_var_name, args.y_var_name)
-        
-        # Format the correlation text
-        correlation_text = (
-            f"ρ: {spearman_corr:.2f}\n"
-            f"r: {pearson_corr:.2f}\n"
-            f"R²: {r_squared:.3f}"
-        )
-        
-        # Add the correlation as a text annotation
-        ax.text(
-            0.05, 0.95, correlation_text, 
-            transform=ax.transAxes,  # Use axes coordinates (0 to 1)
-            fontsize=15, 
-            verticalalignment='top', 
-            horizontalalignment='left',
-            bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5')
-        )
+        if args.add_text_correlations:
+            # Compute correlations
+            spearman_corr, pearson_corr, r_squared = compute_correlations(df, args.x_var_name, args.y_var_name)
+            
+            # Format the correlation text
+            correlation_text = (
+                f"ρ: {spearman_corr:.2f}\n"
+                f"r: {pearson_corr:.2f}\n"
+                f"R²: {r_squared:.3f}"
+            )
+
+            # Add the correlation as a text annotation
+            ax.text(
+                0.05, 0.95, correlation_text, 
+                transform=ax.transAxes,  # Use axes coordinates (0 to 1)
+                fontsize=args.font_size_correlations, 
+                verticalalignment='top', 
+                horizontalalignment='left',
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5')
+            )
     else:
         raise NotImplementedError
 
@@ -95,27 +97,6 @@ def make_plot(args, df):
     return 0
 
 
-def compute_correlations(df, x_col, y_col):
-    # Drop NaN values and align the data
-    x_data = df[x_col].dropna()
-    y_data = df[y_col].dropna()
-    common_index = x_data.index.intersection(y_data.index)
-    x_data = x_data.loc[common_index]
-    y_data = y_data.loc[common_index]
-    
-    # Compute Spearman correlation
-    spearman_corr = stats.spearmanr(x_data, y_data)[0]
-    
-    # Compute Pearson correlation
-    pearson_corr = stats.pearsonr(x_data, y_data)[0]
-    
-    # Compute R² using statsmodels OLS
-    X = sm.add_constant(x_data)  # Add intercept for regression
-    model = sm.OLS(y_data, X).fit()
-    r_squared = model.rsquared
-    
-    return spearman_corr, pearson_corr, r_squared
-
 def parse_args():
     parser = argparse.ArgumentParser()
 
@@ -137,6 +118,7 @@ def parse_args():
     parser.add_argument('--log_scale_y', action='store_true')
     parser.add_argument('--type_plot', choices=['bar', 'line', 'box', 'violin', 'scatter', 'reg'],
                         default='bar', help='the type of plot (line, bar)')
+
     parser.add_argument('--x_var_name', type=str, default='method',
                         help='name of the variable for x')
     parser.add_argument('--y_var_name', type=str, default='tp_train',
@@ -146,6 +128,12 @@ def parse_args():
     parser.add_argument('--style_var_name', type=str, default=None,
                         help='legend of this bar plot')
     parser.add_argument('--size_var_name', type=str, default=None,)
+
+    parser.add_argument('--add_text_methods', action='store_true')
+    parser.add_argument('--add_text_correlations', action='store_false')
+    parser.add_argument('--font_size_methods', type=int, default=8)
+    parser.add_argument('--font_size_correlations', type=int, default=15)
+
     parser.add_argument('--orient', type=str, default=None,
                         help='orientation of plot "v", "h"')
 
@@ -230,8 +218,6 @@ def process_df(args):
         args.keep_methods = METHODS_RESNET
     elif args.method_family == 'vit':
         args.keep_methods = METHODS_VIT
-    # else: 
-    #     args.keep_methods = METHODS_RESNET_FSL
 
     if args.summarized:
         df = filter_df(
@@ -244,8 +230,8 @@ def process_df(args):
         )
     else:
         df = preprocess_df(
-            args.input_file,
-            'acc',
+            df,
+            'all',
             getattr(args, 'keep_datasets', None),
             getattr(args, 'keep_methods', None),
             getattr(args, 'keep_serials', None),

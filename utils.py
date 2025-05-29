@@ -3,29 +3,18 @@ import pandas as pd
 
 
 SERIALS_EXPLANATIONS = [
+    # best lr acc
+    'ft_448',
+
     # main experiments
-    'ft_224',
-    'fz_224',
     'ft_448',
     'fz_448',
-
-    # inference cost
-    'inference_224',
-    'inference_448',
-
-    # train cost
-    'train_224',
-    'train_448',
 ]
 
 
 SETTINGS_DIC = {
-    'fz_224': 'IS=224',
-    'fz_448': 'IS=448',
-    'ft_224': 'IS=224 (FT)',
-    'ft_448': 'IS=448 (FT)',
-    'mtd_224': 'IS=224 (MTD)',
-    'mtd_448': 'IS=448 (MTD)',
+    'ft_448': 'FT',
+    'fz_448': 'FZ',
 }
 
 SERIAL_DIC = {
@@ -34,52 +23,59 @@ SERIAL_DIC = {
 }
 
 METHODS_RESNET = [
-    'hiresnet50.tv_in1k', 'hiresnet50.tv2_in1k', 'hiresnet50.gluon_in1k', 
-    'hiresnet50.fb_swsl_ig1b_ft_in1k', 'hiresnet50.fb_ssl_yfcc100m_ft_in1k',
-    'hiresnet50.a1_in1k',
-
-    'hiresnet50.tv_in1k_fz', 'hiresnet50.tv2_in1k_fz', 'hiresnet50.gluon_in1k_fz', 
-    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz', 'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz',
-    'hiresnet50.a1_in1k_fz',
-
-    'hiresnet50.in1k_mocov3', 'hiresnet50.in1k_spark', 
-    'hiresnet50.in1k_supcon', 'hiresnet50.in1k_swav',
+    'hiresnet50.tv_in1k',
+    'hiresnet50.gluon_in1k',
     'hiresnet50.in21k_miil',
+    'hiresnet50.a1_in1k',
+    'hiresnet50.tv2_in1k',
 
-    'hiresnet50.in1k_byol_fz', 'hiresnet50.in1k_mocov3_fz', 'hiresnet50.in1k_spark_fz', 
-    'hiresnet50.in1k_supcon_fz', 'hiresnet50.in1k_swav_fz',
+    'hiresnet50.fb_swsl_ig1b_ft_in1k',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k',
+
+    'hiresnet50.in1k_supcon',
+    'hiresnet50.in1k_swav',
+    'hiresnet50.in1k_mocov3',
+    'hiresnet50.in1k_spark',
+
+    'hiresnet50.tv_in1k_fz',
+    'hiresnet50.gluon_in1k_fz', 
     'hiresnet50.in21k_miil_fz',
+    'hiresnet50.a1_in1k_fz',
+    'hiresnet50.tv2_in1k_fz',
+
+    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz',
+
+    'hiresnet50.in1k_supcon_fz',
+    'hiresnet50.in1k_swav_fz',
+    'hiresnet50.in1k_mocov3_fz',
+    'hiresnet50.in1k_spark_fz', 
 ]
 
 METHODS_VIT = [
-    'hivit_base_patch16_224.orig_in21k', 'hivit_base_patch16_224_miil.in21k',
-    'hideit_base_patch16_224.fb_in1k', 'hideit3_base_patch16_224.fb_in1k',
+    'hivit_base_patch16_224.orig_in21k',
+    'hideit_base_patch16_224.fb_in1k',
+    'hivit_base_patch16_224_miil.in21k',
+    'hideit3_base_patch16_224.fb_in1k',
     'hideit3_base_patch16_224.fb_in22k_ft_in1k',
 
-    'hivit_base_patch16_224.orig_in21k_fz', 'hivit_base_patch16_224_miil.in21k_fz',
-    'hideit_base_patch16_224.fb_in1k_fz', 'hideit3_base_patch16_224.fb_in1k_fz',
+    'hivit_base_patch16_224.in1k_mocov3',
+    'hivit_base_patch16_224.dino',
+    'hivit_base_patch16_clip_224.laion2b',
+    'hivit_base_patch16_siglip_224.v2_webli',
+    'hivit_base_patch16_224.mae', 
+
+    'hivit_base_patch16_224.orig_in21k_fz',
+    'hideit_base_patch16_224.fb_in1k_fz',
+    'hivit_base_patch16_224_miil.in21k_fz',
+    'hideit3_base_patch16_224.fb_in1k_fz',
     'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz',
 
-    'hivit_base_patch16_clip_224.laion2b','hivit_base_patch16_224.mae', 
-    'hivit_base_patch16_224.in1k_mocov3','hivit_base_patch16_224.dino',
-    'hivit_base_patch16_siglip_224.v2_webli',
-
-    'hivit_base_patch16_clip_224.laion2b_fz','hivit_base_patch16_224.mae_fz', 
-    'hivit_base_patch16_224.in1k_mocov3_fz','hivit_base_patch16_224.dino_fz',
+    'hivit_base_patch16_224.in1k_mocov3_fz',
+    'hivit_base_patch16_224.dino_fz',
+    'hivit_base_patch16_clip_224.laion2b_fz',
     'hivit_base_patch16_siglip_224.v2_webli_fz',
-]
-
-DATASETS_UFGIR = [
-    'cotton',
-    'soyageing',
-    'soyageingr1',
-    'soyageingr3',
-    'soyageingr4',
-    'soyageingr5',
-    'soyageingr6',
-    'soygene',
-    'soyglobal',
-    'soylocal',
+    'hivit_base_patch16_224.mae_fz', 
 ]
 
 
@@ -109,14 +105,49 @@ DATASETS_DIC = {
     'all': 'Average',
 }
 
+
 METHODS_DIC = {
+    # ResNet FSL models
+    'hiresnet50.tv_in1k': 'RN TV1',
+    'hiresnet50.gluon_in1k': 'RN Gluon',
+    'hiresnet50.in21k_miil': 'RN IN21k-P',
+    'hiresnet50.a1_in1k': 'RN A1',
+    'hiresnet50.tv2_in1k': 'RN TV2',
+
+    # ResNet Semi-SL models
+    'hiresnet50.fb_swsl_ig1b_ft_in1k': 'RN IG1b',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k': 'RN YFCC100m',
+
+    # ResNet SSL models
+    'hiresnet50.in1k_supcon': 'RN SupCon',
+    'hiresnet50.in1k_swav': 'RN SwAV',
+    'hiresnet50.in1k_mocov3': 'RN MoCo v3',
+    'hiresnet50.in1k_spark': 'RN SparK',
+
+    # ResNet FSL Frozen models 
+    'hiresnet50.tv_in1k_fz': 'RN TV1',
+    'hiresnet50.gluon_in1k_fz': 'RN Gluon',
+    'hiresnet50.in21k_miil_fz': 'RN IN21k-P',
+    'hiresnet50.a1_in1k_fz': 'RN A1',
+    'hiresnet50.tv2_in1k_fz': 'RN TV2',
+    
+    # ResNet Semi-SL Frozen models
+    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz': 'RN IG1b',
+    'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz': 'RN YFCC100m',
+
+    # ResNet SSL Frozen models
+    'hiresnet50.in1k_supcon_fz': 'RN SupCon',
+    'hiresnet50.in1k_swav_fz': 'RN SwAV',
+    'hiresnet50.in1k_mocov3_fz': 'RN MoCo v3',
+    'hiresnet50.in1k_spark_fz': 'RN SparK',
+
     # ViT models
-    'vit_b16': 'ViT',
     'hivit_base_patch16_224.orig_in21k': 'ViT',
     'hideit_base_patch16_224.fb_in1k': 'DeiT',
     'hivit_base_patch16_224_miil.in21k': 'ViT IN21k-P',
-    'hideit3_base_patch16_224.fb_in22k_ft_in1k': 'DeiT 3 (IN21k)',
     'hideit3_base_patch16_224.fb_in1k': 'DeiT 3 (IN1k)',
+    'hideit3_base_patch16_224.fb_in22k_ft_in1k': 'DeiT 3 (IN21k)',
+
     'hivit_base_patch16_224.in1k_mocov3': 'ViT MoCo v3',
     'hivit_base_patch16_224.dino': 'ViT DINO',
     'hivit_base_patch16_clip_224.laion2b': 'ViT CLIP',
@@ -127,55 +158,20 @@ METHODS_DIC = {
     'hivit_base_patch16_224.orig_in21k_fz': 'ViT',
     'hideit_base_patch16_224.fb_in1k_fz': 'DeiT',
     'hivit_base_patch16_224_miil.in21k_fz': 'ViT IN21k-P',
-    'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz': 'DeiT 3 (IN21k)',
     'hideit3_base_patch16_224.fb_in1k_fz': 'DeiT 3 (IN1k)',
+    'hideit3_base_patch16_224.fb_in22k_ft_in1k_fz': 'DeiT 3 (IN21k)',
+
     'hivit_base_patch16_224.in1k_mocov3_fz': 'ViT MoCo v3',
     'hivit_base_patch16_224.dino_fz': 'ViT DINO',
     'hivit_base_patch16_clip_224.laion2b_fz': 'ViT CLIP',
     'hivit_base_patch16_siglip_224.v2_webli_fz': 'ViT SigLIP v2',
     'hivit_base_patch16_224.mae_fz': 'ViT MAE',
-
-    # ResNet FSL models
-    'hiresnet50.tv_in1k': 'RN TV1',
-    'hiresnet50.tv2_in1k': 'RN TV2',
-    'hiresnet50.gluon_in1k': 'RN Gluon',
-    'hiresnet50.a1_in1k': 'RN A1',
-    'hiresnet50.in21k_miil': 'RN IN21k-P',
-
-    # ResNet Semi-SL models
-    'hiresnet50.fb_swsl_ig1b_ft_in1k': 'RN IG1b',
-    'hiresnet50.fb_ssl_yfcc100m_ft_in1k': 'RN YFCC100m',
-
-    # ResNet SSL models
-    'hiresnet50.in1k_byol': 'RN BYOL',
-    'hiresnet50.in1k_mocov3': 'RN MoCo v3',
-    'hiresnet50.in1k_supcon': 'RN SupCon',
-    'hiresnet50.in1k_swav': 'RN SwAV',
-    'hiresnet50.in1k_spark': 'RN SparK',
-
-    # ResNet FSL Frozen models 
-    'hiresnet50.tv_in1k_fz': 'RN TV1',
-    'hiresnet50.tv2_in1k_fz': 'RN TV2',
-    'hiresnet50.gluon_in1k_fz': 'RN Gluon',
-    'hiresnet50.a1_in1k_fz': 'RN A1',
-    'hiresnet50.in21k_miil_fz': 'RN IN21k-P',
-    
-    # ResNet Semi-SL Frozen models
-    'hiresnet50.fb_swsl_ig1b_ft_in1k_fz': 'RN IG1b',
-    'hiresnet50.fb_ssl_yfcc100m_ft_in1k_fz': 'RN YFCC100m',
-
-    # ResNet SSL Frozen models
-    'hiresnet50.in1k_byol_fz': 'RN BYOL',
-    'hiresnet50.in1k_mocov3_fz': 'RN MoCo v3',
-    'hiresnet50.in1k_supcon_fz': 'RN SupCon',
-    'hiresnet50.in1k_swav_fz': 'RN SwAV',
-    'hiresnet50.in1k_spark_fz': 'RN SparK',
 }
 
 
 VAR_DIC = {
     'setting': 'Setting',
-    'acc': 'Accuracy (%)',
+    'acc_mean': 'Accuracy (%)',
     'acc_std': 'Accuracy Std. Dev. (%)',
     'dataset_name': 'Dataset',
     'method': 'Method',
@@ -244,25 +240,17 @@ def rename_vars(df, var_rename=False, args=None):
 
 def add_setting(df):
     conditions = [
-        ((df['serial'] == 1) & (df['freeze_backbone'] == False)),
-        ((df['serial'] == 1) & (df['freeze_backbone'] == True)),
-        ((df['serial'] == 3) & (df['freeze_backbone'] == False)),
-        ((df['serial'] == 3) & (df['freeze_backbone'] == True)),
+        (df['serial'] == 21),
 
-        (df['serial'] == 40),
-        (df['serial'] == 41),
-
-        (df['serial'] == 42),
-        (df['serial'] == 43),
+        (df['serial'] == 23),
+        (df['serial'] == 24),
     ]
 
     df['setting'] = np.select(conditions, SERIALS_EXPLANATIONS, default='')
     return df
 
 
-def load_df(input_file):
-    df = pd.read_csv(input_file)
-
+def standarize_df(df):
     # methods
     df = df.fillna({'classifier': '', 'selector': ''})
 
@@ -271,33 +259,18 @@ def load_df(input_file):
     df['method'] = df['model_name'] + df['freeze_backbone_str']
 
     df = add_setting(df)
-
-    df.rename(columns={'val_acc_level1': 'acc'}, inplace=True)
-    df.rename(columns={'val_acc_level2': 'acc_2'}, inplace=True)
     return df
 
 
 def keep_columns(df, type='acc'):
-    if type == 'acc':
-        keep = ['acc', 'acc_2', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'augreg', 'acc_in1k', 'cka_avg_test', 'cka_avg_train',
-                'dist_avg_train', 'dist_avg_test', 'dist_norm_avg_train', 'dist_norm_avg_test',
-                'l2_norm_avg_train', 'l2_norm_avg_test',
-                'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
-                'cka_avg_test_ft', 'cka_avg_train_ft', 'dist_avg_train_ft', 'dist_avg_test_ft', 'dist_norm_avg_train_ft', 'dist_norm_avg_test_ft',
-                'l2_norm_avg_train_ft', 'l2_norm_avg_test_ft',
-                'cka_0_train_ft', 'cka_0_test_ft', 'cka_11_train_ft', 'cka_11_test_ft', 'cka_15_train_ft', 'cka_15_test_ft',
-                'cka_high_mean_train', 'cka_mid_mean_train', 'cka_low_mean_train',
-                'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
-                'cka_high_mean_train_ft', 'cka_mid_mean_train_ft', 'cka_low_mean_train_ft',
-                'cka_high_mean_test_ft', 'cka_mid_mean_test_ft', 'cka_low_mean_test_ft',
-                'MSC_train', 'MSC_test', 'V_intra_train', 'V_intra_test',
-                'S_inter_train', 'S_inter_test',
-                'clustering_diversity_train', 'clustering_diversity_test', 'lr',
-                'spectral_diversity_train', 'spectral_diversity_test',
-                'MSC_train_ft', 'MSC_test_ft', 'V_intra_train_ft', 'V_intra_test_ft',
-                'S_inter_train_ft', 'S_inter_test_ft',
-                'clustering_diversity_train_ft', 'clustering_diversity_test_ft',
-                'spectral_diversity_train_ft', 'spectral_diversity_test_ft']
+    if type == 'all':
+        # maybe: 'lr', 'train_loss', 'val_loss'
+        kw_list = ['acc', 'cka_', 'l2_', 'dist_', 'MSC', 'intra', 'inter', 'diversity']
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method'] + \
+            [col for col in df.columns if any(kw in col for kw in kw_list)]
+    elif type == 'acc':
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method'] + \
+            [col for col in df.columns if 'acc' in col]
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
                 'flops', 'max_memory']
@@ -336,11 +309,10 @@ def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
 
 
 def preprocess_df(
-    input_file, type='acc', keep_datasets=None, keep_methods=None, keep_serials=None,
+    df, type='acc', keep_datasets=None, keep_methods=None, keep_serials=None,
     filter_datasets=None, filter_methods=None, filter_serials=None):
     # load dataset and preprocess to include method and setting columns, rename val_acc to acc
-    df = load_df(input_file)
-    # print(df['acc'])
+    df = standarize_df(df)
 
     # drop columns
     df = keep_columns(df, type=type)
@@ -394,30 +366,28 @@ def sort_df(df, method_only=False, raw_data=False):
     return df
 
 
+def sort_cols(df, kw_list=['acc']):
+    # Separate matching and non-matching columns
+    matching_cols = [col for col in df.columns if any(kw in col for kw in kw_list)]
+    non_matching_cols = [col for col in df.columns if not any(kw in col for kw in kw_list)]
 
-def round_combine_str_mean_std(df, col='acc'):
-    df[f'{col}'] = df[f'{col}'].round(2)
-    df[f'{col}_std'] = df[f'{col}_std'].round(2)
+    # Reorder the DataFrame
+    df = df[matching_cols + non_matching_cols]
+    return df
 
-    df[f'{col}_mean_std_latex'] = df[f'{col}'].astype(str) + "\\pm{" + df[f'{col}_std'].astype(str) + "}"
-    df[f'{col}_mean_std'] = df[f'{col}'].astype(str) + "+-" + df[f'{col}_std'].astype(str)
+def round_combine_str_mean_std(df, col='acc', dec=4):
+    df[f'{col}_mean'] = df[f'{col}_mean'].round(dec)
+    df[f'{col}_std'] = df[f'{col}_std'].round(dec)
+
+    df[f'{col}_mean_std_latex'] = df[f'{col}_mean'].astype(str) + "\\pm{" + df[f'{col}_std'].astype(str) + "}"
+    df[f'{col}_mean_std'] = df[f'{col}_mean'].astype(str) + "+-" + df[f'{col}_std'].astype(str)
 
     return df
 
 
 def group_by_family(x):
-    classifiers = ('vit_b16_cls', 'vit_b16_lrblp', 'vit_b16_mpncov', 'vit_b16_ifacls')
-    fgir = ('vit_b16_cls_psm', 'vit_b16_cls_maws', 'vit_b16_cal',
-              'vit_b16_avg_cls_rollout', 'vit_b16_cls_glsim',)
-    ufgir =  ('clevit', 'csdnet', 'mixvit', 'vit_b16_sil')
-    pefgir = ['vit_b16_cls_fz']
-    if x in fgir:
-        return 'fgir'
-    elif x in ufgir:
-        return 'ufgir'
-    elif x in pefgir:
-        return 'pefgir'
-    elif x in classifiers:
-        return 'classifier'
+    if 'resnet' in x:
+        return 'rn'
+    elif 'vit' in x or 'deit' in x:
+        return 'vit'
     return x
-

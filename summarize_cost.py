@@ -3,121 +3,17 @@ import argparse
 
 import pandas as pd
 
-from utils import preprocess_df, sort_df, group_by_family, \
-    DATASETS_UFGIR, METHODS_DIC
+from utils import preprocess_df, sort_df, group_by_family
 
 
-SERIAL_REASSIGN = {
-    40: 1,
-    41: 3,
-    42: 1,
-    43: 3,
+REASSIGN_DIC = {
+    41: 23,
+    43: 24,
 }
 
 
-def rename_serial(x):
-    return SERIAL_REASSIGN.get(x, x)
-
-
 def reassign_serial(df):
-    df['serial'] = df['serial'].apply(rename_serial)
-    return df
-
-
-def summarize_test_cost(input_file, host='server-3090', keep_serials=[40, 41]):
-    df = preprocess_df(
-        input_file,
-        'inference_cost',
-        keep_serials=keep_serials,
-    )
-
-
-    if 'DGX' in host:
-        df = df[(df['host'].str.contains(host))].copy(deep=False)
-    else:
-        df = df[(df['host'] == host)].copy(deep=False)
-
-
-    best_list = []
-
-    method_list = df['method'].unique()
-    for method in method_list:
-        for setting in df[(df['method'] == method)]['setting'].unique():
-            df_subset = df[
-                (df['method'] == method) & (df['setting'] == setting)
-            ]
-
-            df_subset = df_subset.dropna(subset=['throughput'])
-            df_subset_sorted = df_subset.sort_values(by=['throughput'], ascending=False)
-
-            bs_batched = df_subset_sorted['batch_size'].iloc[0]
-            tp_batched = df_subset_sorted['throughput'].iloc[0]
-            vram_batched = df_subset_sorted['max_memory'].iloc[0]
-
-            df_subset_sorted = df_subset.sort_values(by=['batch_size'], ascending=True)
-
-            tp_stream = df_subset_sorted['throughput'].iloc[0]
-            latency_stream = 1 / tp_stream
-            vram_stream = df_subset_sorted['max_memory'].iloc[0]
-
-            # flops = df_subset_sorted['flops'].iloc[0]
-
-            serial = df_subset['serial'].iloc[0]
-
-            # save tp and vram for each method-setting pair
-            best_list.append({
-                'serial': serial, 'method': method, # 'flops_inference': flops,
-                'tp_stream': tp_stream, 'vram_stream': vram_stream, 'latency_stream': latency_stream,
-                'tp_batched': tp_batched, 'vram_batched': vram_batched, 'bs_batched': bs_batched
-            })
-
-
-    df = pd.DataFrame.from_dict(best_list)
-
-    # to be consistent with the naming criteria in the other files / results
-    df = reassign_serial(df)
-
-    return df
-
-
-def agg_train_time_tp_vram(df):
-    # convert train time to hours, compute tp_train (imgs/s), rename memory
-    df['time_train'] = df['time_total'] / 60
-    df['tp_train'] = ((df['num_images_val'] + (df['num_images_train'] * df['epochs'])) 
-        / (df['time_total'] * 60))
-    df['vram_train'] = df['max_memory']
-
-
-    # aggregate across seeds
-    df = df.groupby(['serial', 'method'], as_index=False).agg({
-        'time_train': 'mean',
-        'tp_train': 'mean',
-        'vram_train': 'mean',
-    })
-
-    return df
-
-
-def summarize_train_cost(input_file, keep_serials=None):
-    df = preprocess_df(
-        input_file,
-        'train_cost',
-        keep_serials=keep_serials,
-    )
-
-
-    # aggregate train cost results
-    df = agg_train_time_tp_vram(df)
-
-
-    # keep relevant columns
-    cols_keep = ['serial', 'method', 'time_train', 'tp_train', 'vram_train']
-    df = df[cols_keep]
-
-
-    # to be consistent with the naming criteria in the other files / results
-    df = reassign_serial(df)
-
+    df['serial'] = df['serial'].apply(lambda x: REASSIGN_DIC.get(x, x))
     return df
 
 
@@ -128,19 +24,23 @@ def agg_train_flops(df, ds='cub'):
     df = df.groupby(['serial', 'method'], as_index=False).agg({
         'flops': 'mean',
     })
-    # df = df.rename(columns={'flops': 'flops_train'})
     return df
 
 
 def summarize_train_flops(input_file, keep_serials=None):
+    # read and preprocess
+    df = pd.read_csv(input_file)
+
     df = preprocess_df(
-        input_file,
+        df,
         'train_cost',
         keep_serials=keep_serials,
     )
 
+
     # aggregate parameters and flops and combine
     df = agg_train_flops(df)
+
 
     # keep relevant columns
     cols_keep = ['serial', 'method', 'flops',]
@@ -194,8 +94,10 @@ def agg_parameters(df):
 
 def summarize_parameters(input_file, keep_datasets=None, keep_methods=None,
     keep_serials=None):
+    df = pd.read_csv(input_file)
+
     df = preprocess_df(
-        input_file,
+        df,
         'train_cost',
         keep_datasets,
         keep_methods,
@@ -214,53 +116,58 @@ def summarize_parameters(input_file, keep_datasets=None, keep_methods=None,
     return df
 
 
-def summarize_acc(input_file, keep_datasets=None, keep_methods=None,
-    keep_serials=None):
+def summarize_acc(input_file, acc_col='val_acc_level1', keep_datasets=None,
+                  keep_methods=None, keep_serials=None,
+                  group_keys=['serial', 'setting', 'method']):
+    df = pd.read_csv(input_file)
+
     df = preprocess_df(
-        input_file,
+        df,
         'acc',
         keep_datasets,
         keep_methods,
         keep_serials,
     )
 
-    df_std = df.groupby(['serial', 'setting','method'], as_index=False).agg({'acc': 'std'})
-    df_max = df.groupby(['serial', 'setting','method'], as_index=False).agg({'acc': 'max'})
-    df = df.groupby(['serial', 'setting', 'method'], as_index=False).agg({'acc': 'mean'})
-    df['acc_std'] = df_std['acc']
-    df['acc_max'] = df_max['acc']
+    df_std = df.groupby(group_keys, as_index=False).agg({acc_col: 'std'})
+    df_max = df.groupby(group_keys, as_index=False).agg({acc_col: 'max'})
+    df = df.groupby(group_keys, as_index=False).agg({acc_col: 'mean'})
+    df = df.rename(columns={acc_col: 'acc_mean'})
+
+    df['acc_std'] = df_std[acc_col]
+    df['acc_max'] = df_max[acc_col]
+    df['ada_ratio'] = 100 * (df['acc_std'] / df['acc_mean'])
 
     return df
 
 
 
 def summarize_acc_cost(args):
-    # read acc, train_cost and test_cost
+    # read acc
     df_acc = summarize_acc(
-        args.input_file_acc,
-        getattr(args, 'keep_datasets', None), getattr(args, 'keep_methods', None))
+        args.input_file_acc, args.acc_to_use,
+        getattr(args, 'keep_datasets', None), getattr(args, 'keep_methods', None),
+        getattr(args, 'keep_serials', None))
 
+
+    # read train cost
     df_parameters = summarize_parameters(args.input_file_acc,
-        getattr(args, 'keep_datasets', None), getattr(args, 'keep_methods', None))
+        getattr(args, 'keep_datasets', None), getattr(args, 'keep_methods', None),
+        getattr(args, 'keep_serials', None))
 
-    df_train_flops = summarize_train_flops(args.input_file_train_cost)
-
-    df_train_cost = summarize_train_cost(args.input_file_train_cost)
-
-    # df_test_cost = summarize_test_cost(args.input_file_inference_cost, args.host)
+    df_train_flops = summarize_train_flops(args.input_file_train_cost,
+        getattr(args, 'keep_serials', None))
 
 
     # combine acc, train and test cost and sort based on method
     # outer if want to keep even if not all match
     df = pd.merge(df_acc, df_parameters, how='left', on=['serial', 'method'])
     df = pd.merge(df, df_train_flops, how='left', on=['serial', 'method'])
-    df = pd.merge(df, df_train_cost, how='left', on=['serial', 'method'])
-    # df = pd.merge(df, df_test_cost, how='left', on=['serial', 'method'])
     df = sort_df(df, method_only=True)
 
 
-    # add column that groups up into Classifiers, PEFGIR, PETL, Ours
-    # df['family'] = df['method'].apply(group_by_family)
+    # add column that groups up into ResNet/ViTs
+    df['family'] = df['method'].apply(group_by_family)
 
 
     # aggregate and save results
@@ -275,24 +182,24 @@ def parse_args():
 
     # input
     parser.add_argument('--input_file_acc', type=str, 
-                        default=os.path.join('data', 'hierarchical_test.csv'),
+                        default=os.path.join('data', 'hierarchical_all.csv'),
                         help='filename for input .csv file from wandb')
     parser.add_argument('--input_file_train_cost', type=str,
-                        default=os.path.join('data', 'hierarchical_test.csv'),
+                        default=os.path.join('data', 'hierarchical_all.csv'),
                         help='filename for input .csv file from wandb')
-    # parser.add_argument('--input_file_inference_cost', type=str, 
-    #                     default=os.path.join('data', 'fgirft_inference_cost.csv'),
-    #                     help='filename for input .csv file from wandb')
-
-    parser.add_argument('--host', type=str, default='server-3090')
 
     parser.add_argument('--keep_datasets', nargs='+', type=str,
                         default=None)
     parser.add_argument('--keep_methods', nargs='+', type=str,
                         default=None)
+    parser.add_argument('--keep_serials', nargs='+', type=int, default=[23, 24])
+
+    parser.add_argument('--host', type=str, default='server-3090')
+
+    parser.add_argument('--acc_to_use', type=str, default='val_acc_level1')
 
     # output
-    parser.add_argument('--output_file', type=str, default='cost_hierarchical',
+    parser.add_argument('--output_file', type=str, default='cost_val_acc_level1',
                         help='filename for output .csv file')
     parser.add_argument('--results_dir', type=str,
                         default=os.path.join('results_all', 'cost'),

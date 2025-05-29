@@ -1,5 +1,6 @@
 import os
 import argparse
+import numpy as np
 import pandas as pd
 
 
@@ -29,6 +30,45 @@ def merge_pretraining_stats(df, stats_df):
     # Drop the redundant 'pt' column after merging
     if 'pt' in df.columns:
         df = df.drop(columns=['pt'])
+
+    return df
+
+
+def compute_cis(df):
+    # Compute CIS = diversity * acc_in1k
+    # sources: frozen model metrics ('') or finetuned model metrics ('ft')
+    sources = ['', '_ft']
+    metrics = ['spectral_diversity', 'clustering_diversity', 'cka_0', 'cka_last',
+               'dist_0', 'dist_last']
+    splits = ['train', 'test']
+    for source in sources:
+        for m in metrics:
+            for split in splits:
+                df[f'cis_{m}_{split}{source}'] = df[f'{m}_{split}{source}'] * df['acc_in1k']
+    return df
+
+
+def assign_metric_last_layer(df):
+    # sources: frozen model metrics ('') or finetuned model metrics ('ft')
+    sources = ['', '_ft']
+    metrics = ['cka', 'dist']
+    splits = ['train', 'test']
+
+    for source in sources:
+        for m in metrics:
+            for split in splits:
+                col_name = f'{m}_last_{split}{source}'
+                df[col_name] = np.nan
+
+                # Masks based on the 'model_name' column
+                mask_vit = df['model_name'].str.contains('hivit|hideit', case=False, na=False)
+                mask_resnet = df['model_name'].str.contains('hiresnet50', case=False, na=False)
+
+                # Assign values for ViT models (layer 11)
+                df.loc[mask_vit, col_name] = df.loc[mask_vit, f'{m}_11_{split}{source}']
+
+                # Assign values for ResNet models (layer 15)
+                df.loc[mask_resnet, col_name] = df.loc[mask_resnet, f'{m}_15_{split}{source}']
 
     return df
 
@@ -73,12 +113,17 @@ def main():
     df = pd.read_csv(args.input_file_acc)
     df_metrics = pd.read_csv(args.input_file_metrics)
     stats_df = load_process_pretraining_stats(args.input_file_pretrainings)
-    print(len(df), df.columns, df.iloc[0])
+    print(len(df), len(df.columns), list(df.columns), df.iloc[0])
 
     # merge dataframes
     df = pd.merge(df, df_metrics, how='left', on=['dataset_name', 'model_name'])
     df = pd.merge(df, stats_df, how='left', on=['model_name'])
-    print(len(df), df.columns, df.iloc[0])
+    print(len(df), len(df.columns), list(df.columns), df.iloc[0])
+
+    # compute new columns
+    df = assign_metric_last_layer(df)
+    df = compute_cis(df)
+    print(len(df), len(df.columns), list(df.columns), df.iloc[0])
 
     # Sort and save the updated DataFrame
     sort_save_df(df, args.output_file, args.sort_cols)
