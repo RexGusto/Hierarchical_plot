@@ -48,10 +48,14 @@ def make_plot(args, df):
             spearman_corr, pearson_corr, r_squared = compute_correlations(df, args.x_var_name, args.y_var_name)
             
             # Format the correlation text
+            # correlation_text = (
+            #     f"ρ: {spearman_corr:.2f}\n"
+            #     f"r: {pearson_corr:.2f}\n"
+            #     f"R²: {r_squared:.3f}"
+            # )
+
             correlation_text = (
-                f"ρ: {spearman_corr:.2f}\n"
-                f"r: {pearson_corr:.2f}\n"
-                f"R²: {r_squared:.3f}"
+                f"ρ: {spearman_corr:.2f}"
             )
 
             # Add the correlation as a text annotation
@@ -166,7 +170,7 @@ def parse_args():
     parser.add_argument('--color', type=str, default=None)
     parser.add_argument('--font_family', type=str, default='serif',
                         help='font family (sans-serif or serif)')
-    parser.add_argument('--font_scale', type=int, default=1.0,
+    parser.add_argument('--font_scale', type=float, default=1.0,
                         help='adjust the scale of the fonts')
     parser.add_argument('--bg_line_width', type=int, default=0.25,
                         help='adjust the scale of the line widths')
