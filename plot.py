@@ -261,8 +261,10 @@ def main():
         args.palette = [args.color for _ in range(len(args.subset_models))]
 
     df = process_df(args)
-
-    #print(df)
+    pd.options.display.max_columns = None
+    pd.options.display.max_rows = None
+    print(df[args.y_var_name])
+    print(df[args.x_var_name])
 
     make_plot(args, df)
 

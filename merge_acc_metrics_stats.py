@@ -38,9 +38,16 @@ def compute_cis(df):
     # Compute CIS = diversity * acc_in1k
     # sources: frozen model metrics ('') or finetuned model metrics ('ft')
     sources = ['', '_ft']
-    metrics = ['spectral_diversity', 'clustering_diversity', 'cka_0', 'cka_last',
-               'dist_0', 'dist_last']
     splits = ['train', 'test']
+
+    for source in sources:
+        for split in splits:
+            df[f'cka_inv_low_mean_{split}{source}'] = (df[f'cka_low_mean_{split}{source}'] * -1) + 1
+            df[f'cka_inv_high_mean_{split}{source}'] = (df[f'cka_high_mean_{split}{source}'] * -1) + 1
+
+    metrics = ['spectral_diversity', 'clustering_diversity', 'cka_0', 'cka_last',
+            'dist_0', 'dist_last', 'cka_low_mean', 'cka_high_mean', 'cka_inv_low_mean', 'cka_inv_high_mean']
+    
     for source in sources:
         for m in metrics:
             for split in splits:

@@ -62,15 +62,23 @@ metrics=('acc_in1k' 'MSC_train' 'MSC_test' 'V_intra_train' 'V_intra_test' 'S_int
          'cis_dist_0_train' 'cis_dist_0_test' 'cis_dist_last_train' 'cis_dist_last_test')
 
 #Train only
-metrics=('acc_in1k' 'MSC_train' 'V_intra_train' 'S_inter_train' 
-         'cis_clustering_diversity_train' 'cis_spectral_diversity_train' 
-         'cka_avg_train' 'dist_avg_train' 'dist_norm_avg_train' 
-         'l2_norm_avg_train' 'cka_0_train' 'cka_high_mean_train' 
-         'cka_mid_mean_train' 'cka_low_mean_train' 'clustering_diversity_train' 
-         'spectral_diversity_train' 'cka_last_layer_train' 
-         # New metrics
-         'cis_cka_0_train' 'cis_cka_last_train' 'cis_dist_0_train' 
-         'cis_dist_last_train')
+# metrics=('acc_in1k' 'MSC_train' 'V_intra_train' 'S_inter_train' 
+#          'cis_clustering_diversity_train' 'cis_spectral_diversity_train' 
+#          'cka_avg_train' 'dist_avg_train' 'dist_norm_avg_train' 
+#          'l2_norm_avg_train' 'cka_0_train' 'cka_high_mean_train' 
+#          'cka_mid_mean_train' 'cka_low_mean_train' 'clustering_diversity_train' 
+#          'spectral_diversity_train' 'cka_last_layer_train' 
+#          # New metrics
+#          'cis_cka_0_train' 'cis_cka_last_train' 'cis_dist_0_train' 
+#          'cis_dist_last_train')
+
+metrics=(
+        # NEW new metric
+        'cis_cka_high_mean_train' 
+        # 'cis_cka_low_mean_train'
+        # 'cka_inv_low_mean_train' 'cka_inv_high_mean_train'
+        # 'cis_cka_inv_low_mean_train' 'cis_cka_inv_high_mean_train'
+        )
 
 # # Generating plots for each accuracy metric and y_ax
 # for accuracy in "${accuracies[@]}"; do
@@ -249,7 +257,7 @@ for accuracy in "${accuracies[@]}"; do
         name="wap_multiplot"
         title_extend="Weighted Accuracy Precision"
     fi
-    cmd="${base_cmd} --input_folder results_all/new_plots/${accuracy} --output_folder results_all/new_plots/merged/${name} --output_file ${name} --title '${title_extend}' --x_filter rnfz rnft vitfz vitft"
+    cmd="${base_cmd} --input_folder results_all/new_plots/${accuracy} --output_folder results_all/new_plots/merged/${name} --output_file ${name} --title '${title_extend}' --x_filter rnfz rnft vitfz vitft bothft bothfz bothaccftvsmetricfz"
     echo ""
     echo "Running: ${cmd}"
     eval "${cmd}"
