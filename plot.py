@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from utils import filter_df, rename_vars, drop_na, preprocess_df, \
-    METHODS_VIT, METHODS_RESNET
+    METHODS_VIT, METHODS_RESNET, METHODS_DIC
 from compute_correlations import compute_correlations
 
 
@@ -254,6 +254,7 @@ def process_df(args):
 def main():
     args = parse_args()
     args.title = args.title.replace("\\n", "\n")
+    args.title = " ".join([METHODS_DIC.get(w, w) for w in args.title.split()])
     os.makedirs(args.results_dir, exist_ok=True)
 
     if args.color:
@@ -263,8 +264,8 @@ def main():
     df = process_df(args)
     pd.options.display.max_columns = None
     pd.options.display.max_rows = None
-    print(df[args.y_var_name])
-    print(df[args.x_var_name])
+    # print(df[args.y_var_name])
+    # print(df[args.x_var_name])
 
     make_plot(args, df)
 
