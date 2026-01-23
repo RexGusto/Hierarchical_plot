@@ -8,20 +8,20 @@ CONFIG_COLS = [
     'serial', 'dataset_name', 'model_name', 'freeze_backbone',
     'classifier', 'adapter', 'prompt', 
     'opt', 'weight_decay', 'lr', 'base_lr', 'seed',
-    'epochs', 'image_size', 'batch_size', 'num_images_train', 'num_images_val',
+    'epochs', 'image_size', 'batch_size', 'num_images_train', 'num_images_val', 'n_cluster_ratio', 'cfg'
 ]
 
 SUMMARY_COLS = [
     'val_acc_level1', 'val_acc_level2', 'val_acc_level3', 'val_loss', 'ap_w',
     'train_acc_level1', 'train_acc_level2', 'train_acc_level3', 'train_loss',
     'time_total', 'max_memory', 'flops',
-    'no_params', 'no_params_trainable', 'throughput', 
+    'no_params', 'no_params_trainable', 'throughput'
 ]
 
 
 SORT_COLS = [
     'serial', 'dataset_name', 'model_name',
-    'lr', 'seed', 'host', 'batch_size',
+    'lr', 'seed', 'host', 'batch_size', 'n_cluster_ratio', 'cfg'
 ]
 
 
@@ -49,7 +49,13 @@ def make_df(runs, config_cols, summary_cols):
             print(run)
             host = {'host': None}
         cfg = {col: run.config.get(col, None) for col in config_cols}
-        summary = {col: run.summary.get(col, None) for col in summary_cols}
+        # summary = {col: run.summary.get(col, None) for col in summary_cols}
+        summary_dict = dict(run.summary)
+
+        if 'val_acc' in summary_dict and 'val_acc_level1' not in summary_dict:
+            summary_dict['val_acc_level1'] = summary_dict['val_acc']
+
+        summary = {col: summary_dict.get(col, None) for col in summary_cols}
 
         run_data.update(host)
         run_data.update(cfg)
@@ -67,6 +73,7 @@ def make_df(runs, config_cols, summary_cols):
 
 def sort_save_df(df, fp, sort_cols=['serial']):
     df = df.sort_values(by=sort_cols, ascending=[True for _ in sort_cols])
+    print(df['n_cluster_ratio'])
     df.to_csv(fp, header=True, index=False)
     return 0
 

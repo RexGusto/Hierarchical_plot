@@ -11,7 +11,7 @@ from utils import preprocess_df, add_all_cols_group, \
 def aggregate_results_main(
     df, acc_col='val_acc_level1', serials=None, fp=None, 
     add_method_avg=True, add_dataset_avg=False,
-    group_keys=['serial', 'setting', 'dataset_name', 'method']):
+    group_keys=['serial', 'setting', 'dataset_name', 'method', 'cfg']):
     # only include results from certain serials
     df = df[df['serial'].isin(serials)].copy(deep=False)
 
@@ -22,18 +22,47 @@ def aggregate_results_main(
     if add_dataset_avg:
         df = add_all_cols_group(df, 'method')
 
+    # split rows with and without n_cluster_ratio
+    if 'n_cluster_ratio' in df.columns:
+        df_with_ratio = df[df['n_cluster_ratio'].notna()]
+        df_no_ratio = df[df['n_cluster_ratio'].isna()]
+    else:
+        df_with_ratio = pd.DataFrame()
+        df_no_ratio = df
 
-    # compute average, stdev, max, min, ada (deviation to average ratio)
-    df_std = df.groupby(group_keys, as_index=False).agg({acc_col: 'std'})
-    df_max = df.groupby(group_keys, as_index=False).agg({acc_col: 'max'})
-    df_min = df.groupby(group_keys, as_index=False).agg({acc_col: 'min'})
-    df = df.groupby(group_keys, as_index=False).agg({acc_col: 'mean'})
-    df = df.rename(columns={acc_col: 'acc_mean'})
-    
-    df['acc_std'] = df_std[acc_col]
-    df['acc_max'] = df_max[acc_col]
-    df['acc_min'] = df_min[acc_col]
-    df['ada_ratio'] = 100 * (df['acc_std'] / df['acc_mean'])
+    # aggregate rows WITH ratio
+    if not df_with_ratio.empty:
+        group_keys_ratio = group_keys + ['n_cluster_ratio']
+        df_std = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'std'})
+        df_max = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'max'})
+        df_min = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'min'})
+        df_mean = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'mean'})
+        df_mean = df_mean.rename(columns={acc_col: 'acc_mean'})
+
+        df_mean['acc_std'] = df_std[acc_col]
+        df_mean['acc_max'] = df_max[acc_col]
+        df_mean['acc_min'] = df_min[acc_col]
+        df_mean['ada_ratio'] = 100 * (df_mean['acc_std'] / df_mean['acc_mean'])
+    else:
+        df_mean = pd.DataFrame()
+
+    # aggregate rows WITHOUT ratio
+    if not df_no_ratio.empty:
+        df_std_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'std'})
+        df_max_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'max'})
+        df_min_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'min'})
+        df_mean_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'mean'})
+        df_mean_nr = df_mean_nr.rename(columns={acc_col: 'acc_mean'})
+
+        df_mean_nr['acc_std'] = df_std_nr[acc_col]
+        df_mean_nr['acc_max'] = df_max_nr[acc_col]
+        df_mean_nr['acc_min'] = df_min_nr[acc_col]
+        df_mean_nr['ada_ratio'] = 100 * (df_mean_nr['acc_std'] / df_mean_nr['acc_mean'])
+    else:
+        df_mean_nr = pd.DataFrame()
+
+    # combine both
+    df = pd.concat([df_mean, df_mean_nr], ignore_index=True, sort=False)
 
 
     # sort dataframe
@@ -112,17 +141,17 @@ def summarize_results(args):
         df_main = aggregate_results_main(df, acc_col, args.main_serials, f'{fn}_main.csv')
 
         for serial in args.main_serials:
+            if 'n_cluster_ratio' not in df_main.columns:
+                for acc_type in acc_types:
+                    fn = f'{fp}_{acc_col}_{acc_type}_{serial}'
+                    df_pivoted = pivot_table(df_main, acc_type, serial, f'{fn}_pivoted.csv')
 
-            for acc_type in acc_types:
-                fn = f'{fp}_{acc_col}_{acc_type}_{serial}'
-                df_pivoted = pivot_table(df_main, acc_type, serial, f'{fn}_pivoted.csv')
-
-            if args.make_mean_stdev_tables:
-                fn = f'{fp}_{acc_col}_{serial}'
-                pivot_table(df_main, 'acc_mean_std', serial,
-                            f'{fn}_pivoted_mean_std.csv',)
-                pivot_table(df_main, 'acc_mean_std_latex', serial,
-                            f'{fp}_{serial}_pivoted_mean_std_latex.csv',)
+                if args.make_mean_stdev_tables:
+                    fn = f'{fp}_{acc_col}_{serial}'
+                    pivot_table(df_main, 'acc_mean_std', serial,
+                                f'{fn}_pivoted_mean_std.csv',)
+                    pivot_table(df_main, 'acc_mean_std_latex', serial,
+                                f'{fp}_{serial}_pivoted_mean_std_latex.csv',)
 
     return df_main
 

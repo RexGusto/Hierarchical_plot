@@ -51,7 +51,13 @@ METRIC_NAME_MAP = {
     'cis_cka_high_mean_train': "CIS (CKA High Layer)",
     'cis_cka_low_mean_train': "CIS (CKA Low Layer)",
     'cis_cka_inv_low_mean_train': "CIS (CKA Inv. Low Layer)",
-    'cis_cka_inv_high_mean_train': "CIS (CKA Inv. High Layer)"
+    'cis_cka_inv_high_mean_train': "CIS (CKA Inv. High Layer)",
+    'dist_intra_0_train': "Intra-class Dist. First Layer",
+    'dist_inter_0_train': "Inter-class Dist. First Layer",
+    'dist_intra_last_layer_train': "Intra-class Dist. Last Layer",
+    'dist_inter_last_layer_train': "Inter-class Dist. Last Layer",
+    'dist_intra_avg_train': "Intra-class Dist. Average of Layer",
+    'dist_inter_avg_train': "Inter-class Dist. Average of Layer",
 }
 
 # Configuration dictionary for prefix titles

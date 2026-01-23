@@ -40,13 +40,15 @@ def compute_cis(df):
     sources = ['', '_ft']
     splits = ['train', 'test']
 
-    for source in sources:
-        for split in splits:
-            df[f'cka_inv_low_mean_{split}{source}'] = (df[f'cka_low_mean_{split}{source}'] * -1) + 1
-            df[f'cka_inv_high_mean_{split}{source}'] = (df[f'cka_high_mean_{split}{source}'] * -1) + 1
+    # for source in sources:
+    #     for split in splits:
+    #         df[f'cka_inv_low_mean_{split}{source}'] = (df[f'cka_low_mean_{split}{source}'] * -1) + 1
+    #         df[f'cka_inv_high_mean_{split}{source}'] = (df[f'cka_high_mean_{split}{source}'] * -1) + 1
 
-    metrics = ['spectral_diversity', 'clustering_diversity', 'cka_0', 'cka_last',
-            'dist_0', 'dist_last', 'cka_low_mean', 'cka_high_mean', 'cka_inv_low_mean', 'cka_inv_high_mean']
+    # metrics = ['spectral_diversity', 'clustering_diversity', 'cka_0', 'cka_last',
+    #         'dist_0', 'dist_last', 'cka_low_mean', 'cka_high_mean', 'cka_inv_low_mean', 'cka_inv_high_mean']
+    
+    metrics = ['spectral_diversity', 'clustering_diversity']
     
     for source in sources:
         for m in metrics:
@@ -58,7 +60,7 @@ def compute_cis(df):
 def assign_metric_last_layer(df):
     # sources: frozen model metrics ('') or finetuned model metrics ('ft')
     sources = ['', '_ft']
-    metrics = ['cka', 'dist']
+    metrics = ['cka', 'dist', 'dist_intra', 'dist_inter']
     splits = ['train', 'test']
 
     for source in sources:
@@ -100,7 +102,7 @@ def parse_args():
                         default=os.path.join('data', 'stats_pretrainings.csv'))
 
     # Output
-    parser.add_argument('--output_file', default='hierarchical_all.csv', type=str,
+    parser.add_argument('--output_file', default='hierarchical_all_1.csv', type=str,
                         help='File path')
     parser.add_argument('--results_dir', type=str, default='data',
                         help='The directory where results will be stored')
@@ -129,7 +131,7 @@ def main():
 
     # compute new columns
     df = assign_metric_last_layer(df)
-    df = compute_cis(df)
+    # df = compute_cis(df)
     print(len(df), len(df.columns), list(df.columns), df.iloc[0])
 
     # Sort and save the updated DataFrame

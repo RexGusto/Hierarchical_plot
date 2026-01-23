@@ -14,7 +14,11 @@ SUMMARY_COLS_GROUP1 = [
     'dist_0_train', 'dist_0_test', 'dist_11_train', 'dist_11_test', 'dist_15_train', 'dist_15_test',
     'cka_0_train', 'cka_0_test', 'cka_11_train', 'cka_11_test', 'cka_15_train', 'cka_15_test',
     'cka_high_mean_train', 'cka_mid_mean_train', 'cka_low_mean_train',
-    'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test',
+    'cka_high_mean_test', 'cka_mid_mean_test', 'cka_low_mean_test', 
+    'dist_intra_0_train', 'dist_intra_0_test', 'dist_inter_0_train', 'dist_inter_0_test',
+    'dist_intra_11_train', 'dist_intra_11_test', 'dist_inter_11_train', 'dist_inter_11_test',
+    'dist_intra_15_train', 'dist_intra_15_test', 'dist_inter_15_train', 'dist_inter_15_test',
+    'dist_intra_avg_train', 'dist_intra_avg_test', 'dist_inter_avg_train', 'dist_inter_avg_test',
 ]
 SUMMARY_COLS_GROUP2 = [
     'MSC_train', 'MSC_test', 'V_intra_train', 'V_intra_test', 'S_inter_train', 'S_inter_test',
@@ -64,7 +68,8 @@ def make_df(runs, config_cols, summary_cols):
             print(f'{i}/{len(runs)}')
 
     df = pd.DataFrame.from_dict(data_list_dics)
-    # print(len(df), df.columns, df.iloc[0])
+    print(len(df), df.columns, df.iloc[0])
+
     return df
 
 
@@ -88,7 +93,7 @@ def add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1)
     df_ft = df_ft.drop(columns=['serial'])
     df_merged = pd.merge(df_fz, df_ft, how='left', on=['dataset_name', 'model_name'])
 
-    # print(len(df_merged), df_merged.columns, df_merged.iloc[0])
+    print(len(df_merged), df_merged.columns, df_merged.iloc[0])
 
     return df_merged
 
@@ -133,11 +138,14 @@ def main():
     df = make_df(runs, args.config_cols, args.summary_cols)
 
     # add suffixes for ft and fz metrics
-    df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1)
-    df_merged_group2 = add_ft_fz_suffixes(df, serial_fz=26, serial_ft=28, cols=SUMMARY_COLS_GROUP2)
+    # df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1)
+    df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=35, serial_ft=36, cols=SUMMARY_COLS_GROUP1)
+    # df_merged_group2 = add_ft_fz_suffixes(df, serial_fz=26, serial_ft=28, cols=SUMMARY_COLS_GROUP2)
 
     # merge into a single dataframe
-    df = pd.merge(df_merged_group1, df_merged_group2, how='left', on=['dataset_name', 'model_name'])
+    # df = pd.merge(df_merged_group1, df_merged_group2, how='left', on=['dataset_name', 'model_name'])
+    df = df_merged_group1
+    print(df)
 
     # Sort and save the updated DataFrame
     sort_save_df(df, args.output_file, args.sort_cols)

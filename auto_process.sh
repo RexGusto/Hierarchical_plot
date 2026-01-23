@@ -2,17 +2,17 @@
 
 # # download
 # python download_save_wandb_data.py --serials 23 24 --output_file hierarchical_stage1.csv
-# python download_save_wandb_data_feature_metrics.py
+# python download_save_wandb_data_feature_metrics.py --serials 35 36 --output_file hierarchical_feature_metrics_2.csv 
 
-# # merge data from acc, corr metrics and pretraining stats
-# python merge_acc_metrics_stats.py
+# # # merge data from acc, corr metrics and pretraining stats
+# python merge_acc_metrics_stats.py --input_file_metrics data/hierarchical_feature_metrics_2.csv --output_file hierarchical_all_2.csv
 
-# # lr script
-# # python lr_script.py
+# # # lr script
+# # # python lr_script.py
 
-# # # accuracy
-# python summarize_acc.py
-# python summarize_acc_metrics.py
+# # # # accuracy
+# python summarize_acc.py --input_file data/hierarchical_all_2.csv
+# python summarize_acc_metrics.py --input_file data/hierarchical_all_2.csv
 
 # # cost metrics including flops, no params, trainable params
 # python summarize_cost.py
@@ -47,19 +47,19 @@ vit_discrim=('hivit_base_patch16_clip_224.laion2b' 'hivit_base_patch16_224.in1k_
 
 # Updated accuracies array
 y_ax=('acc_max' 'ada_ratio')
-accuracies=('val_acc_level1' 'val_acc_level2' 'ap_w')
+accuracies=('ap_w')
 methods=('resnet' 'vit')
 # Added CKA last layer metrics to the list
-metrics=('acc_in1k' 'MSC_train' 'MSC_test' 'V_intra_train' 'V_intra_test' 'S_inter_train' 'S_inter_test'
-         'cis_clustering_diversity_train' 'cis_clustering_diversity_test' 'cis_spectral_diversity_train' 'cis_spectral_diversity_test'
-         'cka_avg_train' 'cka_avg_test' 'dist_avg_train' 'dist_avg_test' 'dist_norm_avg_train'
-         'dist_norm_avg_test' 'l2_norm_avg_train' 'l2_norm_avg_test'
-         'cka_0_train' 'cka_0_test' 'cka_high_mean_train' 'cka_mid_mean_train' 'cka_low_mean_train'
-         'cka_high_mean_test' 'cka_mid_mean_test' 'cka_low_mean_test' 'clustering_diversity_train' 'spectral_diversity_train'
-         'cka_last_layer_train' 'cka_last_layer_test'
-         # New metrics
-         'cis_cka_0_train' 'cis_cka_0_test' 'cis_cka_last_train' 'cis_cka_last_test'
-         'cis_dist_0_train' 'cis_dist_0_test' 'cis_dist_last_train' 'cis_dist_last_test')
+# metrics=('acc_in1k' 'MSC_train' 'MSC_test' 'V_intra_train' 'V_intra_test' 'S_inter_train' 'S_inter_test'
+#          'cis_clustering_diversity_train' 'cis_clustering_diversity_test' 'cis_spectral_diversity_train' 'cis_spectral_diversity_test'
+#          'cka_avg_train' 'cka_avg_test' 'dist_avg_train' 'dist_avg_test' 'dist_norm_avg_train'
+#          'dist_norm_avg_test' 'l2_norm_avg_train' 'l2_norm_avg_test'
+#          'cka_0_train' 'cka_0_test' 'cka_high_mean_train' 'cka_mid_mean_train' 'cka_low_mean_train'
+#          'cka_high_mean_test' 'cka_mid_mean_test' 'cka_low_mean_test' 'clustering_diversity_train' 'spectral_diversity_train'
+#          'cka_last_layer_train' 'cka_last_layer_test'
+#          # New metrics
+#          'cis_cka_0_train' 'cis_cka_0_test' 'cis_cka_last_train' 'cis_cka_last_test'
+#          'cis_dist_0_train' 'cis_dist_0_test' 'cis_dist_last_train' 'cis_dist_last_test')
 
 #Train only
 # metrics=('acc_in1k' 'MSC_train' 'V_intra_train' 'S_inter_train' 
@@ -69,16 +69,19 @@ metrics=('acc_in1k' 'MSC_train' 'MSC_test' 'V_intra_train' 'V_intra_test' 'S_int
 #          'cka_mid_mean_train' 'cka_low_mean_train' 'clustering_diversity_train' 
 #          'spectral_diversity_train' 'cka_last_layer_train' 
 #          # New metrics
-#          'cis_cka_0_train' 'cis_cka_last_train' 'cis_dist_0_train' 
-#          'cis_dist_last_train')
+#          'cis_cka_0_train' 'cis_cka_last_train' 'cis_dist_0_train' 'cis_dist_last_train') 
+metrics=('dist_intra_last_layer_train' 'dist_inter_last_layer_train'
+         'dist_intra_avg_train' 'dist_inter_avg_train' 'cka_avg_train' 'dist_avg_train' 'dist_norm_avg_train' 
+         'l2_norm_avg_train' 'cka_0_train' 'cka_high_mean_train' 
+         'cka_mid_mean_train' 'cka_low_mean_train' 'dist_intra_0_train' 'dist_inter_0_train')
 
-metrics=(
-        # NEW new metric
-        'cis_cka_high_mean_train' 
-        # 'cis_cka_low_mean_train'
-        # 'cka_inv_low_mean_train' 'cka_inv_high_mean_train'
-        # 'cis_cka_inv_low_mean_train' 'cis_cka_inv_high_mean_train'
-        )
+# metrics=(
+#         # NEW new metric
+#         'cis_cka_high_mean_train' 
+#         'cis_cka_low_mean_train'
+#         'cka_inv_low_mean_train' 'cka_inv_high_mean_train'
+#         'cis_cka_inv_low_mean_train' 'cis_cka_inv_high_mean_train'
+#         )
 
 # # Generating plots for each accuracy metric and y_ax
 # for accuracy in "${accuracies[@]}"; do
@@ -88,11 +91,11 @@ metrics=(
 #     for y_var in "${y_ax[@]}"; do
 #         for metric in "${metrics[@]}"; do
 #             # Determine if this is a CKA last layer metric and set state
-#             if [[ "$metric" == "cka_last_layer_train" ]]; then
+#             if [[ "$metric" == "cka_last_layer_train" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                 state="train"
 #                 # Use acc folder for CKA last layer plots
 #                 base_cmd="python plot.py --type_plot reg --fig_size 6.5 4 --summarized --results_dir results_all/new_plots/${accuracy} --font_scale 3.2 --font_size_correlations 34 --dpi 160"
-#             elif [[ "$metric" == "cka_last_layer_test" ]]; then
+#             elif [[ "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_test" || "$metric" == "dist_inter_last_layer_test" ]]; then
 #                 state="test"
 #                 # Use acc folder for CKA last layer plots
 #                 base_cmd="python plot.py --type_plot reg --fig_size 6.5 4 --summarized --results_dir results_all/new_plots/${accuracy} --font_scale 3.2 --font_size_correlations 34 --dpi 160"
@@ -111,6 +114,10 @@ metrics=(
 #                             # Use specific CKA layer for ResNet (16 layers)
 #                             if [[ "$metric" == "cka_last_layer_train" ]]; then
 #                                 x_var="cka_15_train"
+#                             elif [[ "$metric" == "dist_intra_last_layer_train" ]]; then
+#                                 x_var="dist_intra_15_train"
+#                             elif [[ "$metric" == "dist_inter_last_layer_train" ]]; then
+#                                 x_var="dist_inter_15_train"
 #                             elif [[ "$metric" == "cka_last_layer_test" ]]; then
 #                                 x_var="cka_15_test"
 #                             else
@@ -122,6 +129,10 @@ metrics=(
 #                             # Use specific CKA layer for ViT (12 layers)
 #                             if [[ "$metric" == "cka_last_layer_train" ]]; then
 #                                 x_var="cka_11_train"
+#                             elif [[ "$metric" == "dist_intra_last_layer_train" ]]; then
+#                                 x_var="dist_intra_11_train"
+#                             elif [[ "$metric" == "dist_inter_last_layer_train" ]]; then
+#                                 x_var="dist_inter_11_train"
 #                             elif [[ "$metric" == "cka_last_layer_test" ]]; then
 #                                 x_var="cka_11_test"
 #                             else
@@ -131,14 +142,14 @@ metrics=(
 
 #                         if [[ "$serial" -eq 24 ]]; then
 #                             prefix="fz"
-#                             if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
+#                             if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                                 add_cmd="--y_var_name ${y_var} --x_var_name ${x_var}"
 #                             else
 #                                 add_cmd="--y_var_name ${y_var} --x_var_name ${x_var}"
 #                             fi
 #                         else
 #                             prefix="ft"
-#                             if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
+#                             if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                                 add_cmd="--y_var_name ${y_var} --x_var_name ${x_var}_ft"
 #                             elif [[ "$metric" == "acc_in1k" || "$metric" == "ada_ratio" ]]; then
 #                                 add_cmd="--y_var_name ${y_var} --x_var_name ${metric}"
@@ -164,7 +175,7 @@ metrics=(
 #                     if [[ "$serial" -eq 24 ]]; then
 #                         model_used=${all_models_fz[*]}
 #                         prefix="fz"
-#                         if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
+#                         if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                             add_cmd="--y_var_name ${y_var} --x_var_name cka_last_${state}"
 #                         else
 #                             add_cmd="--y_var_name ${y_var} --x_var_name ${metric}"
@@ -172,7 +183,7 @@ metrics=(
 #                     else
 #                         model_used=${all_models_ft[*]}
 #                         prefix="ft"
-#                         if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
+#                         if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                             add_cmd="--y_var_name ${y_var} --x_var_name cka_last_${state}_ft"
 #                         elif [[ "$metric" == "acc_in1k" || "$metric" == "ada_ratio" ]]; then
 #                             add_cmd="--y_var_name ${y_var} --x_var_name ${metric}"
@@ -208,8 +219,14 @@ metrics=(
 #                     fi
 #                     # else
 #                     model_used=${all_models_ft[*]}
-#                     if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
+#                     if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" || "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_inter_last_layer_train" ]]; then
 #                         add_cmd="--y_var_name ${y_var} --x_var_name cka_last_${state}_matched"
+#                         alter_name="bothaccftvsmetricfz"
+#                     elif [[ "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_intra_last_layer_test" ]]; then
+#                         add_cmd="--y_var_name ${y_var} --x_var_name dist_intra_last_${state}_matched"
+#                         alter_name="bothaccftvsmetricfz"
+#                     elif [[ "$metric" == "dist_inter_last_layer_train" || "$metric" == "dist_inter_last_layer_test" ]]; then
+#                         add_cmd="--y_var_name ${y_var} --x_var_name dist_inter_last_${state}_matched"
 #                         alter_name="bothaccftvsmetricfz"
 #                     else
 #                         add_cmd="--y_var_name ${y_var} --x_var_name ${metric}"
@@ -231,6 +248,10 @@ metrics=(
 #                 output_file="bothft+fz_${y_var}_${metric,,}_${dataset}"
 #                 if [[ "$metric" == "cka_last_layer_train" || "$metric" == "cka_last_layer_test" ]]; then
 #                     add_cmd="--y_var_name ${y_var} --x_var_name cka_last_${state}_matched"
+#                 elif [[ "$metric" == "dist_intra_last_layer_train" || "$metric" == "dist_intra_last_layer_test" ]]; then
+#                     add_cmd="--y_var_name ${y_var} --x_var_name dist_intra_last_${state}_matched"
+#                 elif [[ "$metric" == "dist_inter_last_layer_train" || "$metric" == "dist_inter_last_layer_test" ]]; then
+#                     add_cmd="--y_var_name ${y_var} --x_var_name dist_inter_last_${state}_matched"
 #                 elif [[ "$metric" == "acc_in1k" || "$metric" == "ada_ratio" ]]; then
 #                     add_cmd="--y_var_name ${y_var} --x_var_name ${metric}"
 #                 else
