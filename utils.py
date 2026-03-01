@@ -266,10 +266,10 @@ def keep_columns(df, type='acc'):
     if type == 'all':
         # maybe: 'lr', 'train_loss', 'val_loss'
         kw_list = ['acc', 'cka_', 'l2_', 'dist_', 'MSC', 'intra', 'inter', 'diversity']
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'cfg'] + \
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
             [col for col in df.columns if any(kw in col for kw in kw_list)]
     elif type == 'acc':
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'cfg'] + \
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
             [col for col in df.columns if 'acc' in col]
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',

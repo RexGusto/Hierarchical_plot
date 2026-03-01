@@ -8,7 +8,7 @@ CONFIG_COLS = [
     'serial', 'dataset_name', 'model_name', 'freeze_backbone',
     'classifier', 'adapter', 'prompt', 
     'opt', 'weight_decay', 'lr', 'base_lr', 'seed',
-    'epochs', 'image_size', 'batch_size', 'num_images_train', 'num_images_val', 'n_cluster_ratio', 'cfg'
+    'epochs', 'image_size', 'batch_size', 'num_images_train', 'num_images_val', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'
 ]
 
 SUMMARY_COLS = [
@@ -21,7 +21,7 @@ SUMMARY_COLS = [
 
 SORT_COLS = [
     'serial', 'dataset_name', 'model_name',
-    'lr', 'seed', 'host', 'batch_size', 'n_cluster_ratio', 'cfg'
+    'lr', 'seed', 'host', 'batch_size', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'
 ]
 
 

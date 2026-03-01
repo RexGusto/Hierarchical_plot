@@ -11,7 +11,7 @@ from utils import preprocess_df, add_all_cols_group, \
 def aggregate_results_main(
     df, acc_col='val_acc_level1', serials=None, fp=None, 
     add_method_avg=True, add_dataset_avg=False,
-    group_keys=['serial', 'setting', 'dataset_name', 'method', 'cfg']):
+    group_keys=['serial', 'setting', 'dataset_name', 'method']):
     # only include results from certain serials
     df = df[df['serial'].isin(serials)].copy(deep=False)
 
@@ -32,15 +32,30 @@ def aggregate_results_main(
 
     # aggregate rows WITH ratio
     if not df_with_ratio.empty:
-        group_keys_ratio = group_keys + ['n_cluster_ratio']
+        group_keys_ratio = group_keys + ['n_cluster_ratio', 'extractor_layer', 'model_name_extractor']
         df_std = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'std'})
-        df_max = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'max'})
+        # get max accuracy rows (to extract lr)
+        idx_max = df_with_ratio.groupby(group_keys_ratio)[acc_col].idxmax()
+
+        # remove groups where idxmax failed (all-NaN accuracy)
+        idx_max = idx_max.dropna().astype(int)
+
+        df_max_rows = df_with_ratio.loc[idx_max, group_keys_ratio + [acc_col, 'lr']]
+
+        df_max = df_max_rows[group_keys_ratio + [acc_col]].rename(
+            columns={acc_col: 'acc_max'}
+        )
+
+        df_max_lr = df_max_rows[group_keys_ratio + ['lr']].rename(
+            columns={'lr': 'lr_acc_max'}
+        )
         df_min = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'min'})
         df_mean = df_with_ratio.groupby(group_keys_ratio, as_index=False).agg({acc_col: 'mean'})
         df_mean = df_mean.rename(columns={acc_col: 'acc_mean'})
 
         df_mean['acc_std'] = df_std[acc_col]
-        df_mean['acc_max'] = df_max[acc_col]
+        df_mean = df_mean.merge(df_max, on=group_keys_ratio, how='left')
+        df_mean = df_mean.merge(df_max_lr, on=group_keys_ratio, how='left')
         df_mean['acc_min'] = df_min[acc_col]
         df_mean['ada_ratio'] = 100 * (df_mean['acc_std'] / df_mean['acc_mean'])
     else:
@@ -49,13 +64,25 @@ def aggregate_results_main(
     # aggregate rows WITHOUT ratio
     if not df_no_ratio.empty:
         df_std_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'std'})
-        df_max_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'max'})
+        idx_max_nr = df_no_ratio.groupby(group_keys)[acc_col].idxmax()
+        idx_max_nr = idx_max_nr.dropna().astype(int)
+
+        df_max_rows_nr = df_no_ratio.loc[idx_max_nr, group_keys + [acc_col, 'lr']]
+
+        df_max_nr = df_max_rows_nr[group_keys + [acc_col]].rename(
+            columns={acc_col: 'acc_max'}
+        )
+
+        df_max_lr_nr = df_max_rows_nr[group_keys + ['lr']].rename(
+            columns={'lr': 'lr_acc_max'}
+        )
         df_min_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'min'})
         df_mean_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'mean'})
         df_mean_nr = df_mean_nr.rename(columns={acc_col: 'acc_mean'})
 
         df_mean_nr['acc_std'] = df_std_nr[acc_col]
-        df_mean_nr['acc_max'] = df_max_nr[acc_col]
+        df_mean_nr = df_mean_nr.merge(df_max_nr, on=group_keys, how='left')
+        df_mean_nr = df_mean_nr.merge(df_max_lr_nr, on=group_keys, how='left')
         df_mean_nr['acc_min'] = df_min_nr[acc_col]
         df_mean_nr['ada_ratio'] = 100 * (df_mean_nr['acc_std'] / df_mean_nr['acc_mean'])
     else:

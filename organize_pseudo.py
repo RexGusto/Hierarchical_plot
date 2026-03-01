@@ -18,22 +18,6 @@ def extract_dataset_key(name):
 
     return name
 
-def extract_teacher_from_cfg(cfg):
-    if pd.isna(cfg):
-        return ""
-
-    parts = os.path.basename(cfg).replace(".yaml", "").split("_")
-    if "pseudo" in parts:
-        idx = parts.index("pseudo")
-        if idx + 1 < len(parts):
-            teacher = parts[idx + 1]
-            # Check for short names that need next part appended
-            if teacher in ["rn", "vit"] and idx + 2 < len(parts):
-                teacher += "_" + parts[idx + 2]
-            return teacher
-    return ""
-
-
 def normalize_method_name(m):
     if m.startswith("hi"):
         return m
@@ -70,21 +54,53 @@ def compute_differences(df, baseline_serial):
             print(f"[WARN] No baseline {baseline_serial} for {method} / {dataset}, skipping.")
             continue
 
-        base_ada = float(base.iloc[0]["ada_ratio"])
+        base_row = base.iloc[0]
+
+        base_ada = float(base_row["ada_ratio"])
+        base_acc_mean = float(base_row["acc_mean"])
+        base_acc_std = float(base_row["acc_std"])
 
         for _, r in sub.iterrows():
             r = r.copy()
+
             ada = float(r["ada_ratio"])
+            acc_mean = float(r["acc_mean"])
+            acc_std = float(r["acc_std"])
 
             if r["serial"] == baseline_serial:
+                # ADA
                 r["abs_dif_ada"] = 0.0
                 r["rel_dif_ada"] = 0.0
+
+                # ACC MEAN
+                r["abs_dif_acc_mean"] = 0.0
+                r["rel_dif_acc_mean"] = 0.0
+
+                # ACC STD
+                r["abs_dif_acc_std"] = 0.0
+                r["rel_dif_acc_std"] = 0.0
+
             else:
+                # ---- ADA ----
                 r["abs_dif_ada"] = ada - base_ada
-                if base_ada != 0:
-                    r["rel_dif_ada"] = 100.0 * (ada - base_ada) / base_ada
-                else:
-                    r["rel_dif_ada"] = 0.0
+                r["rel_dif_ada"] = (
+                    100.0 * (ada - base_ada) / base_ada
+                    if base_ada != 0 else 0.0
+                )
+
+                # ---- ACC MEAN ----
+                r["abs_dif_acc_mean"] = acc_mean - base_acc_mean
+                r["rel_dif_acc_mean"] = (
+                    100.0 * (acc_mean - base_acc_mean) / base_acc_mean
+                    if base_acc_mean != 0 else 0.0
+                )
+
+                # ---- ACC STD ----
+                r["abs_dif_acc_std"] = acc_std - base_acc_std
+                r["rel_dif_acc_std"] = (
+                    100.0 * (acc_std - base_acc_std) / base_acc_std
+                    if base_acc_std != 0 else 0.0
+                )
 
             rows.append(r)
 
@@ -101,6 +117,12 @@ def build_master_table(df, main_serials):
     if "ada_ratio" not in df.columns:
         raise ValueError("Input CSV does not contain ada_ratio column!")
 
+    # Ensure required columns exist
+    required_cols = ["model_name_extractor", "extractor_layer"]
+    for col in required_cols:
+        if col not in df.columns:
+            raise ValueError(f"Input CSV does not contain {col} column!")
+
     # Normalize method names
     df = normalize_method_names(df)
 
@@ -111,21 +133,22 @@ def build_master_table(df, main_serials):
     # Sort rows
     df = sort_by_serials(df, main_serials)
 
-    # Create teacher column from cfg
-    if "cfg" in df.columns:
-        df["teacher"] = df["cfg"].apply(extract_teacher_from_cfg)
-        # Remove cfg column for final CSVs
-        df = df.drop(columns=["cfg"])
-    else:
-        df["teacher"] = ""  # empty if cfg not present
-
-    # Keep only useful columns (n_cluster_ratio before ada_ratio)
+    # Keep only useful columns
     keep_cols = [
         "serial",
         "dataset_name",
         "method",
-        "teacher",        
+        "model_name_extractor",
+        "extractor_layer",
         "n_cluster_ratio",
+        "acc_max",
+        "lr_acc_max",
+        "acc_mean",
+        "abs_dif_acc_mean",
+        "rel_dif_acc_mean",
+        "acc_std",
+        "abs_dif_acc_std",
+        "rel_dif_acc_std",
         "ada_ratio",
         "abs_dif_ada",
         "rel_dif_ada",
@@ -133,8 +156,8 @@ def build_master_table(df, main_serials):
     keep_cols = [c for c in keep_cols if c in df.columns]
     df = df[keep_cols]
 
-    # Round numbers
-    df = df.round(3)
+    print(df["lr_acc_max"])
+
 
     return df
 
