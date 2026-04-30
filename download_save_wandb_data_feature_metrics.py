@@ -139,12 +139,12 @@ def main():
 
     # add suffixes for ft and fz metrics
     # df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=25, serial_ft=27, cols=SUMMARY_COLS_GROUP1)
-    df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=35, serial_ft=36, cols=SUMMARY_COLS_GROUP1)
-    # df_merged_group2 = add_ft_fz_suffixes(df, serial_fz=26, serial_ft=28, cols=SUMMARY_COLS_GROUP2)
+    # df_merged_group1 = add_ft_fz_suffixes(df, serial_fz=35, serial_ft=36, cols=SUMMARY_COLS_GROUP1)
+    df_merged_group2 = add_ft_fz_suffixes(df, serial_fz=26, serial_ft=28, cols=SUMMARY_COLS_GROUP2)
 
     # merge into a single dataframe
     # df = pd.merge(df_merged_group1, df_merged_group2, how='left', on=['dataset_name', 'model_name'])
-    df = df_merged_group1
+    df = df_merged_group2
     print(df)
 
     # Sort and save the updated DataFrame

@@ -14,6 +14,8 @@ def aggregate_results_main(
     group_keys=['serial', 'setting', 'dataset_name', 'method']):
     # only include results from certain serials
     df = df[df['serial'].isin(serials)].copy(deep=False)
+    if 'n_cluster_ratio' in df.columns:
+        df.loc[df['n_cluster_ratio'] == 0, 'n_cluster_ratio'] = np.nan
 
 
     # compute method avg (across datasets) or dataset avg (across methods)
@@ -58,6 +60,7 @@ def aggregate_results_main(
         df_mean = df_mean.merge(df_max_lr, on=group_keys_ratio, how='left')
         df_mean['acc_min'] = df_min[acc_col]
         df_mean['ada_ratio'] = 100 * (df_mean['acc_std'] / df_mean['acc_mean'])
+        df_mean['cva'] = df_mean['acc_std'] / df_mean['acc_mean'] - (3 * df_mean['acc_std'])
     else:
         df_mean = pd.DataFrame()
 
@@ -85,6 +88,7 @@ def aggregate_results_main(
         df_mean_nr = df_mean_nr.merge(df_max_lr_nr, on=group_keys, how='left')
         df_mean_nr['acc_min'] = df_min_nr[acc_col]
         df_mean_nr['ada_ratio'] = 100 * (df_mean_nr['acc_std'] / df_mean_nr['acc_mean'])
+        df_mean_nr['cva'] = df_mean_nr['acc_std'] / df_mean_nr['acc_mean'] - (3 * df_mean_nr['acc_std'])
     else:
         df_mean_nr = pd.DataFrame()
 
@@ -156,7 +160,10 @@ def summarize_results(args):
         getattr(args, 'filter_datasets', None),
         getattr(args, 'filter_methods', None),
         getattr(args, 'filter_serials', None),
+        getattr(args, 'keep_ratios', None),
+        getattr(args, 'keep_extractor', None),
     )
+    print(df['serial'].unique())
 
     # aggregate and save results
     fp = os.path.join(args.results_dir, args.output_file)
@@ -166,6 +173,7 @@ def summarize_results(args):
     for acc_col in acc_cols:
         fn = f'{fp}_{acc_col}'
         df_main = aggregate_results_main(df, acc_col, args.main_serials, f'{fn}_main.csv')
+        print(df_main['serial'].unique())
 
         for serial in args.main_serials:
             if 'n_cluster_ratio' not in df_main.columns:

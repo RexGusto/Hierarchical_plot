@@ -18,8 +18,22 @@ SETTINGS_DIC = {
 }
 
 SERIAL_DIC = {
-    23: 'FT',
+    32: 'Baseline (BL)',
+    23: 'Real Hierarchy (RH)',
     24: 'FZ',
+    39: 'Pseudo-Hierarchy',
+    40: 'Pseudo-Hierarchy (PH)',
+    51: 'Different Extractors',
+    52: 'Kmeans',
+    53: 'Agglomerative',
+    62: 'Baseline (bs)',
+    63: 'Pseudo-Hierarchy (bs)',
+    64: 'Baseline (epochs)',
+    65: 'Pseudo-Hierarchy (epochs)',
+    66: 'Baseline (is)',
+    67: 'Pseudo-Hierarchy (is)',
+    68: 'Baseline (augs)',
+    69: 'Pseudo-Hierarchy (augs)',
 }
 
 METHODS_RESNET = [
@@ -109,10 +123,10 @@ DATASETS_DIC = {
 METHODS_DIC = {
     # ResNet FSL models
     'hiresnet50.tv_in1k': 'RN TV1',
+    'hiresnet50.tv2_in1k': 'RN TV2',
     'hiresnet50.gluon_in1k': 'RN Gluon',
     'hiresnet50.in21k_miil': 'RN IN21k-P',
     'hiresnet50.a1_in1k': 'RN A1',
-    'hiresnet50.tv2_in1k': 'RN TV2',
 
     # ResNet Semi-SL models
     'hiresnet50.fb_swsl_ig1b_ft_in1k': 'RN IG1b',
@@ -145,7 +159,12 @@ METHODS_DIC = {
     'hivit_base_patch16_224.orig_in21k': 'ViT',
     'hideit_base_patch16_224.fb_in1k': 'DeiT',
     'hivit_base_patch16_224_miil.in21k': 'ViT IN21k-P',
+
+    'hideit3_small_patch16_224.fb_in1k': 'DeiT 3 Small (IN1k)',
     'hideit3_base_patch16_224.fb_in1k': 'DeiT 3 (IN1k)',
+    'hideit3_large_patch16_224.fb_in1k': 'DeiT 3 Large (IN1k)',
+    'hideit3_huge_patch16_224.fb_in1k': 'DeiT 3 Huge (IN1k)',
+
     'hideit3_base_patch16_224.fb_in22k_ft_in1k': 'DeiT 3 (IN21k)',
 
     'hivit_base_patch16_224.in1k_mocov3': 'ViT MoCo v3',
@@ -191,7 +210,8 @@ VAR_DIC = {
     'latency_stream': 'Stream Latency (s)',
     'tp_batched': 'Batched Throughput  (Images/s)',
     'vram_batched': 'Batched VRAM (GB)',
-    'serial' : 'Status'
+    'serial' : 'Status',
+    'n_cluster_ratio': 'Cluster Ratio'
 }
 
 
@@ -214,6 +234,8 @@ def rename_vars(df, var_rename=False, args=None):
         df['setting'] = df['setting'].apply(rename_var)
     if 'method' in df.columns:
         df['method'] = df['method'].apply(rename_var)
+    if 'model_name_extractor' in df.columns:
+        df['model_name_extractor'] = df['model_name_extractor'].apply(rename_var)
     if 'dataset_name' in df.columns:
         df['dataset_name'] = df['dataset_name'].apply(rename_var)
     if 'family' in df.columns:
@@ -266,10 +288,10 @@ def keep_columns(df, type='acc'):
     if type == 'all':
         # maybe: 'lr', 'train_loss', 'val_loss'
         kw_list = ['acc', 'cka_', 'l2_', 'dist_', 'MSC', 'intra', 'inter', 'diversity']
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'batch_size'] + \
             [col for col in df.columns if any(kw in col for kw in kw_list)]
     elif type == 'acc':
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr'] + \
             [col for col in df.columns if 'acc' in col]
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
@@ -285,16 +307,28 @@ def keep_columns(df, type='acc'):
 
 
 def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
-              filter_datasets=None, filter_methods=None, filter_serials=None):
-    
+              filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None):
+    # print(df['dataset_name'].unique())
     if keep_datasets:
         df = df[df['dataset_name'].isin(keep_datasets)]
+
+    # print(df['dataset_name'].unique())
 
     if keep_methods:
         df = df[df['method'].isin(keep_methods)]
 
+    if keep_extractors:
+        df = df[df['model_name_extractor'].isin(keep_extractors)]
+
     if keep_serials:
         df = df[df['serial'].isin(keep_serials)]
+
+    # print(df['n_cluster_ratio'].unique())
+    if 'n_cluster_ratio' in df.columns:
+        df['n_cluster_ratio'] = df['n_cluster_ratio'].fillna(0).astype(int)
+    if keep_ratios:
+        df = df[df['n_cluster_ratio'].isin(keep_ratios)]
+        # print(df['n_cluster_ratio'].unique())
 
     if filter_datasets:
         df = df[~df['dataset_name'].isin(filter_datasets)]
@@ -310,7 +344,7 @@ def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
 
 def preprocess_df(
     df, type='acc', keep_datasets=None, keep_methods=None, keep_serials=None,
-    filter_datasets=None, filter_methods=None, filter_serials=None):
+    filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None):
     # load dataset and preprocess to include method and setting columns, rename val_acc to acc
     df = standarize_df(df)
 
@@ -319,8 +353,8 @@ def preprocess_df(
 
     # filter
     df = filter_df(df, keep_datasets, keep_methods, keep_serials,
-                   filter_datasets, filter_methods, filter_serials)
-    
+                   filter_datasets, filter_methods, filter_serials, keep_ratios, keep_extractors)
+
     df = sort_df(df)
     # print(df)
     return df
@@ -349,7 +383,7 @@ def sort_df(df, method_only=False, raw_data=False):
     if raw_data:
         df['dataset_order'] = pd.Categorical(df['dataset_name'], categories=DATASETS_DIC.keys(), ordered=True)
         df['model_name_order'] = pd.Categorical(df['model_name'], categories=METHODS_DIC.keys(), ordered=True)
-
+        
         df = df.sort_values(by=['serial', 'dataset_name', 'method_order'], ascending=True)
         df = df.drop(columns=['model_name_order', 'dataset_order'])
     elif method_only:
@@ -359,10 +393,16 @@ def sort_df(df, method_only=False, raw_data=False):
         df = df.drop(columns=['method_order'])
     else:
         df['dataset_order'] = pd.Categorical(df['dataset_name'], categories=DATASETS_DIC.keys(), ordered=True)
+        if 'model_name_extractor' in df.columns:
+            df['model_name_extractor_order'] = pd.Categorical(df['model_name_extractor'], categories=METHODS_DIC.keys(), ordered=True)
         df['method_order'] = pd.Categorical(df['method'], categories=METHODS_DIC.keys(), ordered=True)
-
-        df = df.sort_values(by=['serial', 'setting', 'dataset_order', 'method_order'], ascending=True)
-        df = df.drop(columns=['method_order', 'dataset_order'])
+        df['serial_order'] = pd.Categorical(df['serial'], categories=SERIAL_DIC.keys(), ordered=True)
+        if 'model_name_extractor_order' in df.columns:
+            df = df.sort_values(by=['serial_order', 'dataset_order', 'method_order', 'model_name_extractor_order'], ascending=True)
+            df = df.drop(columns=['method_order', 'dataset_order', 'serial_order', 'model_name_extractor_order'])
+        else:
+            df = df.sort_values(by=['serial_order', 'dataset_order', 'method_order'], ascending=True)
+            df = df.drop(columns=['method_order', 'dataset_order', 'serial_order'])
     return df
 
 

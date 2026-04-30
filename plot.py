@@ -4,8 +4,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from utils import filter_df, rename_vars, drop_na, preprocess_df, \
-    METHODS_VIT, METHODS_RESNET, METHODS_DIC
+from utils import filter_df, rename_vars, drop_na, preprocess_df, sort_df, \
+    METHODS_VIT, METHODS_RESNET, METHODS_DIC, DATASETS_DIC
 from compute_correlations import compute_correlations
 
 
@@ -67,6 +67,21 @@ def make_plot(args, df):
                 horizontalalignment='left',
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5')
             )
+    elif args.type_plot == 'heatmap':
+        heatmap_data = df.pivot_table(
+            index=args.y_var_name,
+            columns=args.x_var_name,
+            values=args.hue_var_name,
+            aggfunc="mean"
+        )
+
+        ax = sns.heatmap(
+            heatmap_data,
+            fmt=".1f",
+            annot=True,
+            cbar=True
+        )
+    
     else:
         raise NotImplementedError
 
@@ -90,7 +105,7 @@ def make_plot(args, df):
         plt.yticks(rotation = args.y_rotation)
 
     # Change location of legend
-    if args.hue_var_name:
+    if not args.type_plot == 'heatmap' and args.hue_var_name:
         sns.move_legend(ax, loc=args.loc_legend)
 
     # save plot
@@ -116,11 +131,13 @@ def parse_args():
     parser.add_argument('--filter_datasets', nargs='+', type=str, default=None)
     parser.add_argument('--filter_methods', nargs='+', type=str, default=None)
     parser.add_argument('--keep_serials', nargs='+', type=int, default=None)
+    parser.add_argument('--keep_ratios', nargs='+', type=int, default=None)
+    parser.add_argument('--keep_extractor', nargs='+', type=str, default=None)
 
     # Make a plot
     parser.add_argument('--log_scale_x', action='store_true')
     parser.add_argument('--log_scale_y', action='store_true')
-    parser.add_argument('--type_plot', choices=['bar', 'line', 'box', 'violin', 'scatter', 'reg'],
+    parser.add_argument('--type_plot', choices=['bar', 'line', 'box', 'violin', 'scatter', 'reg', 'heatmap'],
                         default='bar', help='the type of plot (line, bar)')
 
     parser.add_argument('--x_var_name', type=str, default='method',
@@ -210,6 +227,8 @@ def parse_args():
                         help='flag for making plot')
     parser.add_argument('--method_family', type=str, default = None,
                         help='choose method family to be used')
+    parser.add_argument('--aggregate_dataset', action='store_true',
+                        help='aggregate dataset naming variants into one')
 
     args= parser.parse_args()
     return args
@@ -223,7 +242,15 @@ def process_df(args):
     elif args.method_family == 'vit':
         args.keep_methods = METHODS_VIT
 
+    if args.aggregate_dataset:
+        base_datasets = ['aircraft', 'cub', 'cars']
+
+        df['dataset_name'] = df['dataset_name'].apply(
+            lambda x: x.split('_')[0] if x.split('_')[0] in base_datasets else x
+        )
+
     if args.summarized:
+        df['method'] = df['method'].apply(lambda x: x if str(x).startswith('hi') else f'hi{x}')
         df = filter_df(
             df,
             getattr(args, 'keep_datasets', None),
@@ -231,8 +258,15 @@ def process_df(args):
             getattr(args, 'keep_serials', None),
             getattr(args, 'filter_datasets', None),
             getattr(args, 'filter_methods', None),
+            getattr(args, 'filter_serials', None),
+            getattr(args, 'keep_ratios', None),
+            getattr(args, 'keep_extractor', None),
         )
+        
+        df = sort_df(df)
+        # print(df['method'])
     else:
+        df['model_name'] = df['model_name'].apply(lambda x: x if str(x).startswith('hi') else f'hi{x}')
         df = preprocess_df(
             df,
             'all',
@@ -242,12 +276,17 @@ def process_df(args):
             getattr(args, 'filter_datasets', None),
             getattr(args, 'filter_methods', None),
             getattr(args, 'filter_serials', None),
+            getattr(args, 'keep_ratios', None),
+            getattr(args, 'keep_extractor', None),
         )
+        # print(df['method'].unique())
+        # print(df['n_cluster_ratio'])
     # print(df)
 
     df = drop_na(df, args)
 
     df = rename_vars(df, var_rename=True, args=args)
+    
     return df
 
 
@@ -255,6 +294,7 @@ def main():
     args = parse_args()
     args.title = args.title.replace("\\n", "\n")
     args.title = " ".join([METHODS_DIC.get(w, w) for w in args.title.split()])
+    args.title = " ".join([DATASETS_DIC.get(w, w) for w in args.title.split()])
     os.makedirs(args.results_dir, exist_ok=True)
 
     if args.color:

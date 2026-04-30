@@ -2,17 +2,17 @@
 
 # # download
 # python download_save_wandb_data.py --serials 23 24 --output_file hierarchical_stage1.csv
-# python download_save_wandb_data_feature_metrics.py --serials 35 36 --output_file hierarchical_feature_metrics_2.csv 
+python download_save_wandb_data_feature_metrics.py --serials 26 28 --output_file hierarchical_feature_metrics_2.csv 
 
 # # # merge data from acc, corr metrics and pretraining stats
-# python merge_acc_metrics_stats.py --input_file_metrics data/hierarchical_feature_metrics_2.csv --output_file hierarchical_all_2.csv
+python merge_acc_metrics_stats.py --input_file_metrics data/hierarchical_feature_metrics_2.csv --output_file hierarchical_all_2.csv
 
 # # # lr script
 # # # python lr_script.py
 
 # # # # accuracy
 # python summarize_acc.py --input_file data/hierarchical_all_2.csv
-# python summarize_acc_metrics.py --input_file data/hierarchical_all_2.csv
+python summarize_acc_metrics.py --input_file data/hierarchical_all_2.csv
 
 # # cost metrics including flops, no params, trainable params
 # python summarize_cost.py
@@ -265,24 +265,24 @@ metrics=('dist_intra_last_layer_train' 'dist_inter_last_layer_train'
 #         done
 #     done
 # done
-accuracies=('ap_w')
-base_cmd="python merge_corr_plots.py"
-for accuracy in "${accuracies[@]}"; do
-    if [[ "$accuracy" == "val_acc_level1" ]]; then
-        name="acc1_multiplot"
-        title_extend="Level 1 Accuracy"
-    elif [[ "$accuracy" == "val_acc_level2" ]]; then
-        name="acc2_multiplot"
-        title_extend="Level 2 Accuracy"
-    else
-        name="wap_multiplot"
-        title_extend="Weighted Accuracy Precision"
-    fi
-    cmd="${base_cmd} --input_folder results_all/new_plots/${accuracy} --output_folder results_all/new_plots/merged/${name} --output_file ${name} --title '${title_extend}' --x_filter rnfz rnft vitfz vitft bothft bothfz bothaccftvsmetricfz"
-    echo ""
-    echo "Running: ${cmd}"
-    eval "${cmd}"
-done
+# accuracies=('ap_w')
+# base_cmd="python merge_corr_plots.py"
+# for accuracy in "${accuracies[@]}"; do
+#     if [[ "$accuracy" == "val_acc_level1" ]]; then
+#         name="acc1_multiplot"
+#         title_extend="Level 1 Accuracy"
+#     elif [[ "$accuracy" == "val_acc_level2" ]]; then
+#         name="acc2_multiplot"
+#         title_extend="Level 2 Accuracy"
+#     else
+#         name="wap_multiplot"
+#         title_extend="Weighted Accuracy Precision"
+#     fi
+#     cmd="${base_cmd} --input_folder results_all/new_plots/${accuracy} --output_folder results_all/new_plots/merged/${name} --output_file ${name} --title '${title_extend}' --x_filter rnfz rnft vitfz vitft bothft bothfz bothaccftvsmetricfz"
+#     echo ""
+#     echo "Running: ${cmd}"
+#     eval "${cmd}"
+# done
 
 # top3_best_models=('hiresnet50.in1k_mocov3' 'hiresnet50.in1k_swav' 'hiresnet50.in1k_spark' 'hiresnet50.a1_in1k' 'hivit_base_patch16_224.orig_in21k' 'hivit_base_patch16_siglip_224.v2_webli' 'hivit_base_patch16_224.dino' 'hivit_base_patch16_clip_224.laion2b')
 # # ViT best vs resnet best top-1

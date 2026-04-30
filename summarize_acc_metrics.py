@@ -97,6 +97,7 @@ def summarize_results(args):
         getattr(args, 'filter_datasets', None),
         getattr(args, 'filter_methods', None),
         getattr(args, 'filter_serials', None),
+        getattr(args, 'keep_ratios', None),
     )
 
     # aggregate and save results

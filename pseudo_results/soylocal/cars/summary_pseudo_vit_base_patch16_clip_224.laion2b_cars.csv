@@ -1,0 +1,2 @@
+serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
+32,cars,hivit_base_patch16_clip_224.laion2b,,,,91.64,5e-06,53.36,0.0,0.0,38.6721,0.0,0.0,72.4739173679257,0.0,0.0,-115.2915077488962,0.0,0.0

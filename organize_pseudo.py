@@ -57,6 +57,7 @@ def compute_differences(df, baseline_serial):
         base_row = base.iloc[0]
 
         base_ada = float(base_row["ada_ratio"])
+        base_cva = float(base_row["cva"])
         base_acc_mean = float(base_row["acc_mean"])
         base_acc_std = float(base_row["acc_std"])
 
@@ -64,6 +65,7 @@ def compute_differences(df, baseline_serial):
             r = r.copy()
 
             ada = float(r["ada_ratio"])
+            cva = float(r["cva"])
             acc_mean = float(r["acc_mean"])
             acc_std = float(r["acc_std"])
 
@@ -79,6 +81,10 @@ def compute_differences(df, baseline_serial):
                 # ACC STD
                 r["abs_dif_acc_std"] = 0.0
                 r["rel_dif_acc_std"] = 0.0
+
+                # CVA
+                r["abs_dif_cva"] = 0.0
+                r["rel_dif_cva"] = 0.0
 
             else:
                 # ---- ADA ----
@@ -100,6 +106,13 @@ def compute_differences(df, baseline_serial):
                 r["rel_dif_acc_std"] = (
                     100.0 * (acc_std - base_acc_std) / base_acc_std
                     if base_acc_std != 0 else 0.0
+                )
+
+                # ---- CVA ----
+                r["abs_dif_cva"] = cva - base_cva
+                r["rel_dif_cva"] = (
+                    100.0 * (cva - base_cva) / base_cva
+                    if base_cva != 0 else 0.0
                 )
 
             rows.append(r)
@@ -152,6 +165,10 @@ def build_master_table(df, main_serials):
         "ada_ratio",
         "abs_dif_ada",
         "rel_dif_ada",
+        'cva',
+        "abs_dif_cva",
+        "rel_dif_cva",
+
     ]
     keep_cols = [c for c in keep_cols if c in df.columns]
     df = df[keep_cols]

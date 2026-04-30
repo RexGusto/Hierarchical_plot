@@ -57,29 +57,29 @@ def compute_cis(df):
     return df
 
 
-def assign_metric_last_layer(df):
-    # sources: frozen model metrics ('') or finetuned model metrics ('ft')
-    sources = ['', '_ft']
-    metrics = ['cka', 'dist', 'dist_intra', 'dist_inter']
-    splits = ['train', 'test']
+# def assign_metric_last_layer(df):
+#     # sources: frozen model metrics ('') or finetuned model metrics ('ft')
+#     sources = ['', '_ft']
+#     metrics = ['cka', 'dist']
+#     splits = ['train', 'test']
 
-    for source in sources:
-        for m in metrics:
-            for split in splits:
-                col_name = f'{m}_last_{split}{source}'
-                df[col_name] = np.nan
+#     for source in sources:
+#         for m in metrics:
+#             for split in splits:
+#                 col_name = f'{m}_last_{split}{source}'
+#                 df[col_name] = np.nan
 
-                # Masks based on the 'model_name' column
-                mask_vit = df['model_name'].str.contains('hivit|hideit', case=False, na=False)
-                mask_resnet = df['model_name'].str.contains('hiresnet50', case=False, na=False)
+#                 # Masks based on the 'model_name' column
+#                 mask_vit = df['model_name'].str.contains('hivit|hideit', case=False, na=False)
+#                 mask_resnet = df['model_name'].str.contains('hiresnet50', case=False, na=False)
 
-                # Assign values for ViT models (layer 11)
-                df.loc[mask_vit, col_name] = df.loc[mask_vit, f'{m}_11_{split}{source}']
+#                 # Assign values for ViT models (layer 11)
+#                 df.loc[mask_vit, col_name] = df.loc[mask_vit, f'{m}_11_{split}{source}']
 
-                # Assign values for ResNet models (layer 15)
-                df.loc[mask_resnet, col_name] = df.loc[mask_resnet, f'{m}_15_{split}{source}']
+#                 # Assign values for ResNet models (layer 15)
+#                 df.loc[mask_resnet, col_name] = df.loc[mask_resnet, f'{m}_15_{split}{source}']
 
-    return df
+#     return df
 
 
 def sort_save_df(df, fp, sort_cols=['serial']):
@@ -130,7 +130,7 @@ def main():
     print(len(df), len(df.columns), list(df.columns), df.iloc[0])
 
     # compute new columns
-    df = assign_metric_last_layer(df)
+    # df = assign_metric_last_layer(df)
     # df = compute_cis(df)
     print(len(df), len(df.columns), list(df.columns), df.iloc[0])
 
