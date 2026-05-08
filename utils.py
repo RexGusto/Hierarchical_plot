@@ -291,7 +291,7 @@ def keep_columns(df, type='acc'):
         keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'batch_size'] + \
             [col for col in df.columns if any(kw in col for kw in kw_list)]
     elif type == 'acc':
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr'] + \
+        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
             [col for col in df.columns if 'acc' in col]
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
@@ -350,7 +350,7 @@ def preprocess_df(
 
     # drop columns
     df = keep_columns(df, type=type)
-
+    
     # filter
     df = filter_df(df, keep_datasets, keep_methods, keep_serials,
                    filter_datasets, filter_methods, filter_serials, keep_ratios, keep_extractors)

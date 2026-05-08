@@ -12,10 +12,13 @@ def aggregate_results_main(
     df, acc_col='val_acc_level1', serials=None, fp=None, 
     add_method_avg=True, add_dataset_avg=False,
     group_keys=['serial', 'setting', 'dataset_name', 'method']):
+    
     # only include results from certain serials
     df = df[df['serial'].isin(serials)].copy(deep=False)
+    print(df)
     if 'n_cluster_ratio' in df.columns:
         df.loc[df['n_cluster_ratio'] == 0, 'n_cluster_ratio'] = np.nan
+
 
 
     # compute method avg (across datasets) or dataset avg (across methods)
@@ -23,6 +26,7 @@ def aggregate_results_main(
         df = add_all_cols_group(df, 'dataset_name')
     if add_dataset_avg:
         df = add_all_cols_group(df, 'method')
+
 
     # split rows with and without n_cluster_ratio
     if 'n_cluster_ratio' in df.columns:

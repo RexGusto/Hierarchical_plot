@@ -25,9 +25,9 @@
 # python summarize_acc.py --input_file data/hierarchical_diff_extractor.csv --main_serials 40 51 --results_dir results_all/acc/acc_extractor
 # python organize_pseudo.py --input_csv results_all/acc/acc_extractor/summary_val_acc_level1_main.csv --main_serials 40 51 --output_dir pseudo_results/diff_extractor
 
-python download_save_wandb_data.py --serials 54 55 --output_file hierarchical_soylocal.csv
-python summarize_acc.py --input_file data/hierarchical_soylocal.csv --main_serials 54 55 --results_dir results_all/acc/acc_soylocal
-python organize_pseudo.py --input_csv results_all/acc/acc_soylocal/summary_val_acc_level1_main.csv --main_serials 54 55 --output_dir pseudo_results/soylocal
+# python download_save_wandb_data.py --serials 54 55 --output_file hierarchical_soylocal.csv
+# python summarize_acc.py --input_file data/hierarchical_soylocal.csv --main_serials 54 55 --results_dir results_all/acc/acc_soylocal
+# python organize_pseudo.py --input_csv results_all/acc/acc_soylocal/summary_val_acc_level1_main.csv --main_serials 54 55 --output_dir pseudo_results/soylocal
 
 # python download_save_wandb_data.py --serials 40 23 32 --output_file hierarchical_pseudo_2.csv
 # python summarize_acc.py --input_file data/hierarchical_pseudo_2.csv --main_serials 40 23 32 --results_dir results_all/acc/acc_pseudo_main
@@ -103,3 +103,26 @@ all_models=("${all_resnet[@]}" "${all_vit[@]}")
 # Heatmaps for Soylocal
 # python -u plot.py --keep_serials 39 32 --font_scale 1.5 --fig_size 8 6 --keep_dataset soylocal --x_var_name n_cluster_ratio  --y_var_name lr --x_label 'Cluster Ratio (%)' --y_label 'Learning Rates' --hue_var_name val_acc_level1 --input_file data/hierarchical_soylocal.csv --output_file heatmap_soylocal --title 'Heatmap of Soylocal dataset' --type_plot heatmap
 # python -u plot.py --keep_serials 39 32 --font_scale 1.5 --fig_size 8 6 --keep_dataset soylocal --x_var_name lr  --y_var_name batch_size --x_label 'Learning Rates' --y_label 'Batch Size' --hue_var_name val_acc_level1 --input_file data/hierarchical_soylocal.csv --output_file heatmap_soylocal_1d --title 'Heatmap of Soylocal dataset' --type_plot heatmap
+
+
+# Soylocal stuff
+python download_save_wandb_data.py --serials 72 73 --output_file soylocal_bs.csv
+python summarize_acc.py --input_file data/soylocal_epochs.csv --main_serials 73 --results_dir results_all/soylocal_acc/acc_bs
+python organize_pseudo.py --input_csv results_all/soylocal_acc/acc_epochs/summary_val_acc_level1_main.csv --main_serials 72 73 --output_dir soylocal_results/batch_sizes
+
+python download_save_wandb_data.py --serials 74 75 --output_file soylocal_epochs.csv
+python summarize_acc.py --input_file data/soylocal_epochs.csv --main_serials 74 75 --results_dir results_all/soylocal_acc/acc_epochs
+python organize_pseudo.py --input_csv results_all/soylocal_acc/acc_epochs/summary_val_acc_level1_main.csv --main_serials 74 75 --output_dir soylocal_results/epochs
+
+python download_save_wandb_data.py --serials 76 77 --output_file soylocal_is.csv
+python summarize_acc.py --input_file data/soylocal_is.csv --main_serials 76 77 --results_dir results_all/soylocal_acc/acc_is
+python organize_pseudo.py --input_csv results_all/soylocal_acc/acc_is/summary_val_acc_level1_main.csv --main_serials 76 77 --output_dir soylocal_results/image_size
+
+python download_save_wandb_data.py --serials 78 79 --output_file soylocal_augs.csv
+python summarize_acc.py --input_file data/soylocal_augs.csv --main_serials 78 79 --results_dir results_all/soylocal_acc/acc_augs
+python organize_pseudo.py --input_csv results_all/soylocal_acc/acc_augs/summary_val_acc_level1_main.csv --main_serials 78 79 --output_dir soylocal_results/augs
+
+python -u plot.py --keep_serials 78 79 --x_var_name serial --y_var_name val_acc_level1 --y_label 'Accuracy (%)' --type_plot box --input_file data/soylocal_augs.csv --output_file soylocal_compare_augs --title 'Comparison of 12 augmentations of Soylocal with hideit_base_patch16_224.fb_in1k model in Baseline vs Pseudo-Hierarchy settings'
+python -u plot.py --keep_serials 76 77 --x_var_name serial --y_var_name val_acc_level1 --y_label 'Accuracy (%)' --type_plot box --input_file data/soylocal_is.csv --output_file soylocal_compare_is --title 'Comparison of 10 image sizes (is) of Soylocal with hideit_base_patch16_224.fb_in1k model in Baseline vs Pseudo-Hierarchy settings'
+python -u plot.py --keep_serials 74 75 --x_var_name serial --y_var_name val_acc_level1 --y_label 'Accuracy (%)' --type_plot box --input_file data/soylocal_epochs.csv --output_file soylocal_compare_epochs --title 'Comparison of 10 epochs of Soylocal with hideit_base_patch16_224.fb_in1k model in Baseline vs Pseudo-Hierarchy settings'
+python -u plot.py --keep_serials 72 73 --x_var_name serial --y_var_name val_acc_level1 --y_label 'Accuracy (%)' --type_plot box --input_file data/soylocal_bs.csv --output_file soylocal_compare_bs --title 'Comparison of 10 batch_sizes of Soylocal with hideit_base_patch16_224.fb_in1k model in Baseline vs Pseudo-Hierarchy settings'
