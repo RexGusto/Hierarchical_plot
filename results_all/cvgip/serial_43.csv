@@ -1,0 +1,7 @@
+Name,no_params_trainable,Runtime,max_memory
+ResNet / FT,24.8,33.83,0.19
+ResNet  / FZ,1.29,32.33,0.19
+ViT / FT,86.78,69.5,0.41
+ViT / FZ,0.53,32.67,0.41
+SigLIP / FT,93.86,72.33,0.45
+SigLIP / FZ,0.53,32.83,0.45

@@ -1,0 +1,23 @@
+# soylocal
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hideit3_base_patch16_224.fb_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hideit3_base_patch16_224.fb_in22k_ft_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hideit_base_patch16_224.fb_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.a1_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.fb_ssl_yfcc100m_ft_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.fb_swsl_ig1b_ft_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.gluon_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.in1k_mocov3 --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-05 --model_name hiresnet50.in1k_spark --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.in1k_supcon --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.03 --model_name hiresnet50.in1k_swav --opt sgd --weight_decay 0.0 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.in21k_miil --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.tv2_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.0001 --model_name hiresnet50.tv_in1k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hivit_base_patch16_224.dino --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 1e-05 --model_name hivit_base_patch16_224.in1k_mocov3 --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hivit_base_patch16_224.mae --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 1e-05 --model_name hivit_base_patch16_224.orig_in21k --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.03 --model_name hivit_base_patch16_224_miil.in21k --opt sgd --weight_decay 0.0 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 5e-06 --model_name hivit_base_patch16_clip_224.laion2b --opt adamw --weight_decay 0.05 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+python -u tools/train.py --serial 56 --cfg configs/datasets/soylocal.yaml --lr 0.01 --model_name hivit_base_patch16_siglip_224.v2_webli --opt sgd --weight_decay 0.0 --cpu_workers 20 --epochs 200 --resize_size 550 --image_size 448
+

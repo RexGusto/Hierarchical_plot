@@ -1,0 +1,3 @@
+serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
+78,soylocal,hideit_base_patch16_224.fb_in1k,,,,56.8333,5e-06,49.1111,0.0,0.0,5.7028,0.0,0.0,11.612027450978186,0.0,0.0,-16.99226877193599,0.0,0.0
+79,soylocal,hideit_base_patch16_224.fb_in1k,hideit_base_patch16_224.fb_in1k,-1.0,90.0,49.0,5e-06,42.8056,-6.305500000000002,-12.839256298474279,5.4785,-0.2242999999999995,-3.933155642842104,12.798639424024197,1.186611973046011,10.21881818705184,-16.30759759967093,0.6846711722650589,-4.029309925910805

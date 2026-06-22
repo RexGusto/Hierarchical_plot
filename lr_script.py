@@ -90,7 +90,7 @@ def get_lr_cmd(
     model_tag = MODEL_TAGS.get(model_name, "unknown")
 
     if cluster_ratio is not None:
-        cfg_path = f"datasets/{dataset}/{dataset}_pseudo_{model_tag}_{int(cluster_ratio)}.yaml"
+        cfg_path = f"datasets/{dataset}/{dataset}_pseudo_{model_tag}_{int(cluster_ratio)}.yaml --use_hierarchy --ignore_pl_eval"
     else:
         cfg_path = f"datasets/{dataset}.yaml"
 
@@ -115,9 +115,17 @@ def get_lr_cmd(
 
 def make_lr_script(args):
     df = pd.read_csv(args.input_file)
-    df = df[['dataset_name', 'model_name', 'freeze_backbone',
-             'classifier', 'adapter', 'prompt', 'n_cluster_ratio',
-             args.selection_var, 'train_acc_level1', 'lr', 'base_lr', 'opt', 'weight_decay']]
+    cols = [
+        'serial', 'dataset_name', 'model_name', 'freeze_backbone',
+        'classifier', 'adapter', 'prompt',
+        args.selection_var, 'train_acc_level1',
+        'lr', 'base_lr', 'opt', 'weight_decay'
+    ]
+
+    if 'n_cluster_ratio' in df.columns:
+        cols.append('n_cluster_ratio') 
+
+    df = df[cols]
 
     # dataset and method names
     dataset_list = df['dataset_name'].unique()
@@ -187,6 +195,8 @@ def make_lr_script(args):
 
             f.write(f'# {dataset}\n')
 
+            prev_serial = None
+
             for method in method_list:
                 df_subset = df_dataset[df_dataset['method'] == method].copy(deep=False)
                 df_subset.dropna(subset=args.selection_var, inplace=True)
@@ -194,6 +204,13 @@ def make_lr_script(args):
                 if len(df_subset) == 0:
                     print(dataset, method)
                     continue
+
+                serial = df_subset['serial'].iloc[0]
+
+                if serial != prev_serial:
+                    f.write(f'\n# serial = {serial}\n')
+                    prev_serial = serial
+
 
                 line = get_lr_cmd(
                     df_subset, dataset, method, suffix, prefix,

@@ -1,0 +1,3 @@
+serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
+32,cub_baseline,hivit_base_patch16_224.in1k_mocov3,,,,88.1084,0.01,78.564,0.0,0.0,14.2454,0.0,0.0,18.132158131150028,0.0,0.0,35.82797209894012,0.0,0.0
+23,cub,hivit_base_patch16_224.in1k_mocov3,,,,88.0048,0.01,78.7056,0.14160000000001105,0.1802352222392076,14.4007,0.15530000000000044,1.0901764780209782,18.29697086118703,0.1648127300370028,0.9089526400823948,35.50335986199778,-0.3246122369423432,-0.9060301711911459

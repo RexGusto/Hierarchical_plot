@@ -34,6 +34,8 @@ SERIAL_DIC = {
     67: 'Pseudo-Hierarchy (is)',
     68: 'Baseline (augs)',
     69: 'Pseudo-Hierarchy (augs)',
+    55: 'Baseline',
+    54: 'Pseudo-Hierarchy'
 }
 
 METHODS_RESNET = [
@@ -288,11 +290,32 @@ def keep_columns(df, type='acc'):
     if type == 'all':
         # maybe: 'lr', 'train_loss', 'val_loss'
         kw_list = ['acc', 'cka_', 'l2_', 'dist_', 'MSC', 'intra', 'inter', 'diversity']
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'batch_size'] + \
-            [col for col in df.columns if any(kw in col for kw in kw_list)]
+
+        base_cols = [
+            'ap_w', 'dataset_name', 'serial', 'setting', 'method',
+            'lr', 'n_cluster_ratio', 'batch_size', 'seed'
+        ]
+
+        # keep only columns that actually exist
+        base_cols = [c for c in base_cols if c in df.columns]
+
+        keep = base_cols + [
+            col for col in df.columns
+            if any(kw in col for kw in kw_list)
+        ]
+    
     elif type == 'acc':
-        keep = ['ap_w', 'dataset_name', 'serial', 'setting', 'method', 'lr', 'n_cluster_ratio', 'extractor_layer', 'model_name_extractor'] + \
-            [col for col in df.columns if 'acc' in col]
+        base_cols = [
+            'ap_w', 'dataset_name', 'serial', 'setting', 'method',
+            'lr', 'n_cluster_ratio', 'extractor_layer',
+            'model_name_extractor', 'seed'
+        ]
+
+        base_cols = [c for c in base_cols if c in df.columns]
+
+        keep = base_cols + [
+            col for col in df.columns if 'acc' in col
+        ]
     elif type == 'inference_cost':
         keep = ['host', 'serial', 'setting', 'method', 'batch_size', 'throughput',
                 'flops', 'max_memory']

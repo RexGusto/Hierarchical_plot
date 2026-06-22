@@ -68,6 +68,7 @@ def make_plot(args, df):
                 bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5')
             )
     elif args.type_plot == 'heatmap':
+        print(df['seed'])
         heatmap_data = df.pivot_table(
             index=args.y_var_name,
             columns=args.x_var_name,

@@ -1,0 +1,15 @@
+method,Aircraft,Cars,CUB,Average
+deit3_base_patch16_224.fb_in1k,77.814,78.04,76.452,77.4353
+deit3_base_patch16_224.fb_in22k_ft_in1k,76.202,72.1456,76.836,75.1617
+deit_base_patch16_224.fb_in1k,78.678,80.43,78.668,79.2587
+resnet50.a1_in1k,89.269,89.441,83.813,87.5077
+resnet50.fb_ssl_yfcc100m_ft_in1k,90.58,89.402,81.633,87.205
+resnet50.fb_swsl_ig1b_ft_in1k,90.232,89.094,81.129,86.8183
+resnet50.gluon_in1k,89.929,90.793,81.578,87.4333
+resnet50.tv2_in1k,90.73,91.42,83.351,88.5003
+resnet50.tv_in1k,90.817,91.49,82.209,88.172
+vit_base_patch16_224.dino,,,64.2412,64.2412
+vit_base_patch16_224.mae,56.4667,60.4533,56.732,57.38
+vit_base_patch16_224.orig_in21k,76.035,71.986,79.651,75.8907
+vit_base_patch16_224_miil.in21k,75.7209,70.223,75.968,74.0271
+vit_base_patch16_clip_224.laion2b,57.6175,58.6562,43.418,52.4758

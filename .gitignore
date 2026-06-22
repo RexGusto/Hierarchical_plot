@@ -1,34 +1,44 @@
-*.png
-*.jpg
-*.jpeg
+# *.png
+# *.jpg
+
 
 # weights
 *.ckpt
 *.zip
 *.pth
+*.tar*
+# scripts
+# *.sh
+!**/scripts/*.sh
+*.bat
 
 # logs, results, txt files
 *.log
 *.out
 *.txt
-*.tsv
 #*.csv
+*.tsv
+# exception
+!requirements.txt
+!requirements_conda.txt
 
 # directories
-**/old/*
+**/.gradio/
 **/ckpts/
 **/flagged/
 **/wandb/
-**/results/*
-**/results_all/*
-# exception
 # **/data/*/*
+!**/assets/*
 !**/data/**/*.csv
-!**/data/**/**/*.csv
-!**/results/**/*.csv
-
-# windows files
-*.ini
+!**/samples/**/*rena*
+!**/samples/**/cub*
+!**/samples/**/homura*
+!**/samples/**/notarctia*
+**/results_train/*
+# **/results_inference/*
+!**/results_inference/**/homura*_crops*
+!**/results_inference/**/cub*_crops*
+!**/results_inference/**/*rena*_crops*
 
 # temp nfs files
 *.nfs*
@@ -165,4 +175,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-

@@ -1,0 +1,43 @@
+Model,Mixing Type,Params (G),MACs (M),Top-1 (%)
+MobileNetV2 (1.4),Conv,6.1,0.6,74.7
+EfficientNet-B0,Conv,5.3,0.4,77.1
+GhostNet 1.3X,Conv,7.3,0.24,75.7
+ConvNeXt-A,Conv,3.7,0.55,75.7
+InceptionNeXt-A (Ours),Conv,4.2,0.51,75.3
+DeiT-S,Attn,22,4.6,79.8
+T2T-ViT-14,Attn,22,4.8,81.5
+TNT-S,Attn,24,5.2,81.5
+Swin-T,Attn,29,4.5,81.3
+Focal-T,Attn,29,4.9,82.2
+ResNet-50,Conv,26,4.1,78.4
+RSB-ResNet-50,Conv,26,4.1,79.8
+RegNetY-4G,Conv,21,4,81.3
+FocalNet-T,Conv,29,4.5,82.3
+ConvNeXt-T,Conv,29,4.5,82.1
+InceptionNeXt-T (Ours),Conv,28,4.2,82.3
+T2T-ViT-19,Attn,39,8.5,81.9
+PVT-Medium,Attn,44,6.7,81.2
+Swin-S,Attn,50,8.7,83
+Focal-S,Attn,51,9.1,83.5
+RSB-ResNet-101,Conv,45,7.9,81.3
+RegNetY-8G,Conv,39,8,82.1
+FocalNet-S,Conv,50,8.7,83.5
+ConvNeXt-S,Conv,50,8.7,83.1
+InceptionNeXt-S (Ours),Conv,49,8.4,83.5
+DeiT-B,Attn,86,17.5,81.8
+T2T-ViT-24,Attn,64,13.8,82.3
+TNT-B,Attn,66,14.1,82.9
+PVT-Large,Attn,62,9.8,81.7
+Swin-B,Attn,88,15.4,83.5
+Focal-B,Attn,90,16,83.8
+RSB-ResNet-152,Conv,60,11.6,81.8
+RegNetY-16G,Conv,84,15.9,82.2
+RepLKNet-31B,Conv,79,15.3,83.5
+FocalNet-B,Conv,89,15.4,83.9
+ConvNeXt-B,Conv,89,15.4,83.8
+InceptionNeXt-B (Ours),Conv,87,14.9,84
+DeiT-B,Attn,86,55.4,83.1
+Swin-B,Attn,88,47.1,84.5
+RepLKNet-31B,Conv,79,45.1,84.8
+ConvNeXt-B,Conv,89,45,85.1
+InceptionNeXt-B (Ours),Conv,87,43.6,85.2

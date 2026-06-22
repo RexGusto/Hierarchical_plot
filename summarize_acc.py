@@ -11,7 +11,7 @@ from utils import preprocess_df, add_all_cols_group, \
 def aggregate_results_main(
     df, acc_col='val_acc_level1', serials=None, fp=None, 
     add_method_avg=True, add_dataset_avg=False,
-    group_keys=['serial', 'setting', 'dataset_name', 'method']):
+    group_keys=['serial', 'setting', 'dataset_name', 'method', 'seed']):
     
     # only include results from certain serials
     df = df[df['serial'].isin(serials)].copy(deep=False)
@@ -151,6 +151,8 @@ def pivot_table(df, var='acc_mean', serial=23, fp=None, rename=True):
 def summarize_results(args):
     # load dataset
     df = pd.read_csv(args.input_file)
+    df["model_name_extractor"] = df["model_name_extractor"].fillna(df["model_name"])
+    df["extractor_layer"] = df["extractor_layer"].fillna(-1)
 
     # preprocess to include method and setting columns,
     # drop columns
@@ -167,7 +169,6 @@ def summarize_results(args):
         getattr(args, 'keep_ratios', None),
         getattr(args, 'keep_extractor', None),
     )
-    print(df['serial'].unique())
 
     # aggregate and save results
     fp = os.path.join(args.results_dir, args.output_file)
