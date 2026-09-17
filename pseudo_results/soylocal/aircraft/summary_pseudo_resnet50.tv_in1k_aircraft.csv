@@ -1,2 +1,0 @@
-serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
-32,aircraft,hiresnet50.tv_in1k,,,,92.71,0.03,90.817,0.0,0.0,1.3335,0.0,0.0,1.4682828231789484,0.0,0.0,-3.985668406347487,0.0,0.0

@@ -1,2 +1,0 @@
-serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
-32,cars,hiresnet50.gluon_in1k,,,,93.27,0.03,90.793,0.0,0.0,2.7517,0.0,0.0,3.030738787448574,0.0,0.0,-8.224788613990066,0.0,0.0

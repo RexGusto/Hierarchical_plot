@@ -349,6 +349,57 @@ def move_soylocal_54_empty_cluster_to_55(project):
 
     return 0
 
+def update_serial32_tgda_false_to_101(project):
+    api = wandb.Api()
+
+    runs = api.runs(
+        path=project,
+        filters={
+            'config.serial': 32,
+            'config.tgda': False
+        }
+    )
+
+    print("Number of runs:", len(runs))
+
+    changed_count = 0
+    skipped_count = 0
+
+    for run in runs:
+        old_serial = run.config.get('serial')
+        name = run.name
+
+        print(f"[CHECK] {name} | serial={old_serial}")
+
+        # ---- skip if already correct ----
+        if old_serial == 101 and name.endswith("_101"):
+            print("[SKIP] already updated")
+            skipped_count += 1
+            continue
+
+        # ---- update config ----
+        run.config['serial'] = 101
+
+        # ---- update run name (suffix only) ----
+        new_name = re.sub(r'_32$', '_101', name)
+
+        print(f"[RENAME] {name} → {new_name}")
+
+        if new_name != name:
+            run.name = new_name
+
+        # ---- commit ----
+        run.update()
+
+        print(f"[UPDATED] serial {old_serial} → 101")
+
+        changed_count += 1
+
+    print(f"Done. Updated: {changed_count}, Skipped: {skipped_count}")
+
+    return 0
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
 
@@ -382,7 +433,10 @@ def main():
     # update_soylocal_serial_to_54(
     #    args.project_name)
 
-    move_soylocal_54_empty_cluster_to_55(
+    # move_soylocal_54_empty_cluster_to_55(
+    #    args.project_name)
+
+    update_serial32_tgda_false_to_101(
         args.project_name)
 
     return 0

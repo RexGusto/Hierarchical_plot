@@ -134,6 +134,7 @@ def parse_args():
     parser.add_argument('--keep_serials', nargs='+', type=int, default=None)
     parser.add_argument('--keep_ratios', nargs='+', type=int, default=None)
     parser.add_argument('--keep_extractor', nargs='+', type=str, default=None)
+    parser.add_argument('--keep_ipc', nargs='+', type=int, default=None)
 
     # Make a plot
     parser.add_argument('--log_scale_x', action='store_true')
@@ -251,7 +252,7 @@ def process_df(args):
         )
 
     if args.summarized:
-        df['method'] = df['method'].apply(lambda x: x if str(x).startswith('hi') else f'hi{x}')
+        # df['method'] = df['method'].apply(lambda x: x if str(x).startswith('hi') else f'hi{x}')
         df = filter_df(
             df,
             getattr(args, 'keep_datasets', None),
@@ -262,6 +263,7 @@ def process_df(args):
             getattr(args, 'filter_serials', None),
             getattr(args, 'keep_ratios', None),
             getattr(args, 'keep_extractor', None),
+            getattr(args, 'keep_ipc', None),
         )
         
         df = sort_df(df)
@@ -279,9 +281,10 @@ def process_df(args):
             getattr(args, 'filter_serials', None),
             getattr(args, 'keep_ratios', None),
             getattr(args, 'keep_extractor', None),
+            getattr(args, 'keep_ipc', None),
         )
         # print(df['method'].unique())
-        # print(df['n_cluster_ratio'])
+    # print(df['img_per_class'])
     # print(df)
 
     df = drop_na(df, args)

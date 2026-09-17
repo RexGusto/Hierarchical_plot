@@ -1,4 +1,0 @@
-serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
-32,cars_baseline,hiresnet50.in21k_miil,,,,93.558,0.0001,92.3753,0.0,0.0,0.6278,0.0,0.0,0.6796578618201455,0.0,0.0,-1.8767117956663504,0.0,0.0
-23,cars,hiresnet50.in21k_miil,,,,93.6451,0.0001,92.6974,0.32210000000000605,0.3486862830215502,0.6466,0.018799999999999928,2.9945842625039707,0.6975160904021132,0.017858228581967617,2.6275321136053233,-1.9327630987588584,-0.056051303092508054,2.9866761226705205
-40,cars_pl,hiresnet50.in21k_miil,hiresnet50.in21k_miil,-1.0,25.0,,,,,,,,,,,,,,

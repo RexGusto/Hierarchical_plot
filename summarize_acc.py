@@ -70,6 +70,8 @@ def aggregate_results_main(
 
     # aggregate rows WITHOUT ratio
     if not df_no_ratio.empty:
+        if df.columns.isin(['img_per_class']).any():
+            group_keys = group_keys + ['img_per_class']
         df_std_nr = df_no_ratio.groupby(group_keys, as_index=False).agg({acc_col: 'std'})
         idx_max_nr = df_no_ratio.groupby(group_keys)[acc_col].idxmax()
         idx_max_nr = idx_max_nr.dropna().astype(int)
@@ -168,6 +170,7 @@ def summarize_results(args):
         getattr(args, 'filter_serials', None),
         getattr(args, 'keep_ratios', None),
         getattr(args, 'keep_extractor', None),
+        getattr(args, 'keep_ipc', None),
     )
 
     # aggregate and save results
@@ -181,7 +184,7 @@ def summarize_results(args):
         print(df_main['serial'].unique())
 
         for serial in args.main_serials:
-            if 'n_cluster_ratio' not in df_main.columns:
+            if 'n_cluster_ratio' not in df_main.columns and 'img_per_class' not in df_main.columns:
                 for acc_type in acc_types:
                     fn = f'{fp}_{acc_col}_{acc_type}_{serial}'
                     df_pivoted = pivot_table(df_main, acc_type, serial, f'{fn}_pivoted.csv')

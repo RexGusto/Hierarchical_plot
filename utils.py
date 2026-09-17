@@ -34,8 +34,18 @@ SERIAL_DIC = {
     67: 'Pseudo-Hierarchy (is)',
     68: 'Baseline (augs)',
     69: 'Pseudo-Hierarchy (augs)',
-    55: 'Baseline',
-    54: 'Pseudo-Hierarchy'
+    55: 'BL', # Soylocal
+    54: 'PH', # Soylocal
+    83: 'BL', # Other leaves
+    86: 'PH', # Other leaves
+    90: 'PH + HLS',
+    91: 'PH + SCM1',
+    92: 'PH + HLS + SCM2',
+    93: 'PH + HLS + SCM1',
+    94: 'BL + LS',
+    95: 'BL + CM',
+    102: '1-example baseline',
+    103: '1-example hierarchy'
 }
 
 METHODS_RESNET = [
@@ -293,7 +303,7 @@ def keep_columns(df, type='acc'):
 
         base_cols = [
             'ap_w', 'dataset_name', 'serial', 'setting', 'method',
-            'lr', 'n_cluster_ratio', 'batch_size', 'seed'
+            'lr', 'n_cluster_ratio', 'batch_size', 'seed', 'model_name_extractor', 'seed', 'n_cluster_ratio', 'extractor_layer', 'img_per_class',
         ]
 
         # keep only columns that actually exist
@@ -307,8 +317,8 @@ def keep_columns(df, type='acc'):
     elif type == 'acc':
         base_cols = [
             'ap_w', 'dataset_name', 'serial', 'setting', 'method',
-            'lr', 'n_cluster_ratio', 'extractor_layer',
-            'model_name_extractor', 'seed'
+            'lr', 'n_cluster_ratio', 'extractor_layer', 'img_per_class',
+            'model_name_extractor', 'seed',
         ]
 
         base_cols = [c for c in base_cols if c in df.columns]
@@ -330,7 +340,7 @@ def keep_columns(df, type='acc'):
 
 
 def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
-              filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None):
+              filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None, keep_ipc=None):
     # print(df['dataset_name'].unique())
     if keep_datasets:
         df = df[df['dataset_name'].isin(keep_datasets)]
@@ -347,11 +357,17 @@ def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
         df = df[df['serial'].isin(keep_serials)]
 
     # print(df['n_cluster_ratio'].unique())
-    if 'n_cluster_ratio' in df.columns:
-        df['n_cluster_ratio'] = df['n_cluster_ratio'].fillna(0).astype(int)
+    # if 'n_cluster_ratio' in df.columns:
+    #     df.loc[:, 'n_cluster_ratio'] = df['n_cluster_ratio'].fillna(0).astype(int)
+    if 'img_per_class' in df.columns:
+        df.loc[:, 'img_per_class'] = df['img_per_class'].fillna(1).astype(int)
+
     if keep_ratios:
         df = df[df['n_cluster_ratio'].isin(keep_ratios)]
         # print(df['n_cluster_ratio'].unique())
+    
+    if keep_ipc:
+        df = df[df['img_per_class'].isin(keep_ipc)]
 
     if filter_datasets:
         df = df[~df['dataset_name'].isin(filter_datasets)]
@@ -367,19 +383,19 @@ def filter_df(df, keep_datasets=None, keep_methods=None, keep_serials=None,
 
 def preprocess_df(
     df, type='acc', keep_datasets=None, keep_methods=None, keep_serials=None,
-    filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None):
+    filter_datasets=None, filter_methods=None, filter_serials=None, keep_ratios=None, keep_extractors=None, keep_ipc=None):
     # load dataset and preprocess to include method and setting columns, rename val_acc to acc
     df = standarize_df(df)
-
+    # print(df['img_per_class'])
     # drop columns
     df = keep_columns(df, type=type)
-    
+    # print(df['img_per_class'])
     # filter
     df = filter_df(df, keep_datasets, keep_methods, keep_serials,
-                   filter_datasets, filter_methods, filter_serials, keep_ratios, keep_extractors)
+                   filter_datasets, filter_methods, filter_serials, keep_ratios, keep_extractors, keep_ipc)
 
     df = sort_df(df)
-    # print(df)
+    
     return df
 
 

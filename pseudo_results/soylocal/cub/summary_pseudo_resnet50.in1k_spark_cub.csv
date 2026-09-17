@@ -1,2 +1,0 @@
-serial,dataset_name,method,model_name_extractor,extractor_layer,n_cluster_ratio,acc_max,lr_acc_max,acc_mean,abs_dif_acc_mean,rel_dif_acc_mean,acc_std,abs_dif_acc_std,rel_dif_acc_std,ada_ratio,abs_dif_ada,rel_dif_ada,cva,abs_dif_cva,rel_dif_cva
-32,cub_baseline,hiresnet50.in1k_spark,,,,77.6666,5e-05,71.2427,0.0,0.0,7.5846,0.0,0.0,10.646168990839133,0.0,0.0,-22.64738024159847,0.0,0.0
